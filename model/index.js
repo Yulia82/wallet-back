@@ -1,3 +1,3 @@
-const {} = require("./user");
-const {} = require("./transactions");
-module.exports = {};
+const UserModel = require("./user")
+const {} = require("./transactions")
+module.exports = { UserModel }
