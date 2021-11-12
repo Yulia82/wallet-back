@@ -1,3 +1,4 @@
-const HttpCode = require("./index")
+const HttpCode = require("./httpConstants")
+const ValidNameLength = require("./validateConstants")
 
-module.exports = { HttpCode }
+module.exports = { HttpCode, ValidNameLength }
