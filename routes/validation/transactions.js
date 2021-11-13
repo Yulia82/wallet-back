@@ -1,4 +1,5 @@
 const Joi = require("joi")
+Joi.objectId = require("joi-objectid")(Joi)
 const { validTransactionConst } = require("../../helpers/constants")
 
 const schemaTransaction = Joi.object({
@@ -9,4 +10,8 @@ const schemaTransaction = Joi.object({
 	balance: Joi.number().integer().min(validTransactionConst.MIN_SUM).max(validTransactionConst.MAX_SUM).require(),
 })
 
-module.exports = { schemaTransaction }
+const schemaId = Joi.object({
+	contactId: Joi.objectId().required(),
+})
+
+module.exports = { schemaTransaction, schemaId }

@@ -1,5 +1,5 @@
 const { schemaUser, schemaCredentialsUser, schemaResendVerify } = require("./user")
-const { schemaTransaction } = require("./transactions")
+const { schemaTransaction, schemaId } = require("./transactions")
 
 const validate = async (schema, obj, res, next) => {
 	try {
@@ -25,3 +25,7 @@ module.exports.validateEmailBeforeVerify = async (req, res, next) =>
 	await validate(schemaResendVerify, req.body, res, next)
 //* transaction
 module.exports.validateTransaction = async (req, res, next) => await validate(schemaTransaction, req.body, res, next)
+//* validateId
+module.exports.validateId = async (req, res, next) => {
+	return await validate(schemaId, req.params, res, next)
+}
