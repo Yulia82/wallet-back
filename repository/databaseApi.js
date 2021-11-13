@@ -1,4 +1,4 @@
-const { UserModel } = require("../model")
+const { UserModel, TransactionModel } = require("../model")
 
 class DatabaseApi {
 	//* create new user
@@ -35,10 +35,37 @@ class DatabaseApi {
 
         //! it can be another
             //* if positive
-    // incrementBalance = async (id, balance) => UserModel.findByIdAndUpdate(id,{balance},{new: true})
+    // updateBalance = async (id, balance) => UserModel.findByIdAndUpdate(id,{balance},{new: true})
   
-  //* if negative
-//   incrementBalance = async (id, balance) => UserModel.findByIdAndUpdate(id,{balance},{new: true})
+    //todo
+    //*create transaction
+    createTransaction = async(body)=>{
+        const result = await TransactionModel.create(body)
+        return result
+    }
+    //* get transaction
+    getAllTransaction = async(userId)=>{
+        const results = await TransactionModel.find({owner: userId})
+        return results
+    }
+    //* get transaction byId
+    getTransactionById = async(id, userId)=>{
+        const results = await TransactionModel.findOne({_id:id, owner:userId})
+        return results
+    }
+    //* remove transaction 
+    removeTransaction = async(id, userId)=>{
+        const result = await TransactionModel.findOneAndRemove({_id:id, owner:userId})
+        return result
+    }
+    //* update transaction
+    updateTransaction = async (id,body,userId)=>{
+    const result = await TransactionModel.findOneAndUpdate({_id:id, owner:userId}, {...body}, {
+        new: true
+    })
+    return result
+    }
+
  }
 
 module.exports = new DatabaseApi()
