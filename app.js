@@ -2,6 +2,7 @@ const express = require("express")
 const logger = require("morgan")
 const cors = require("cors")
 const helmet = require("helmet")
+const { userRouter, transactionsRouter } = require("./routes")
 
 const app = express()
 
@@ -11,7 +12,7 @@ app.use(logger(formatsLogger))
 app.use(cors())
 app.use(express.json())
 
-//todo app.use("/api/user", ()=>);
+app.use("/api/user", userRouter)
 //todo app.use("/api/transaction", ()=>);
 
 app.use((req, res) => {

@@ -1,5 +1,5 @@
 const HttpCode = require("./httpConstants")
-const ValidNameLength = require("./validateConstants")
-const errorConstants = require("./error-constants")
+const validateConstants = require("./validateConstants")
+const errorConstants = require("./errorConstants")
 
-module.exports = { HttpCode, ValidNameLength, errorConstants }
+module.exports = { HttpCode, errorConstants, validateConstants }

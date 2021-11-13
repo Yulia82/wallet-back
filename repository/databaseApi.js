@@ -7,18 +7,20 @@ class DatabaseApi {
 		return await user.save()
 	}
 
-	//* get user by id 
+	//* get user by id
 	findUserById = id => UserModel.findById(id)
 
-	//* get user by email 
+	//* get user by email
 	findUserByEmail = email => UserModel.findOne({ email })
 
 	//* update toke for login wait userId and new token or null and refreshToken if we need two tokens
-	updateToken = (id, loginToken, refreshToken) => UserModel.findByIdAndUpdate(id, { loginToken, refreshToken = null }, { new: true })
+	updateToken = (id, loginToken, newRefreshToken) =>
+		UserModel.findByIdAndUpdate(id, { loginToken, refreshToken: (newRefreshToken = null) }, { new: true })
 
-	updateTokenVerify = verifyToken => UserModel.findOneAndUpdate({ verifyToken }, { isVerified: true, verifyToken: null }, { new: true })
+	updateTokenVerify = verifyToken =>
+		UserModel.findOneAndUpdate({ verifyToken }, { isVerified: true, verifyToken: null }, { new: true })
 
-    //* it is for second send for verify
+	//* it is for second send for verify
 	refreshVerifyToken = (id, verifyToken) => UserModel.findByIdAndUpdate(id, { verifyToken }, { new: true })
 
     //* update balance after transactions wait user 
@@ -67,5 +69,6 @@ class DatabaseApi {
     }
 
  }
+
 
 module.exports = new DatabaseApi()
