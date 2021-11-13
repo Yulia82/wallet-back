@@ -20,6 +20,10 @@ class DatabaseApi {
 	updateTokenVerify = verifyToken =>
 		UserModel.findOneAndUpdate({ verifyToken }, { isVerified: true, verifyToken: null }, { new: true })
 
+	findUserByVerifyToken = async verifyToken => {
+		return await UserModel.findOne({ verifyToken })
+	}
+
 	//* it is for second send for verify
 	refreshVerifyToken = (id, verifyToken) => UserModel.findByIdAndUpdate(id, { verifyToken }, { new: true })
 
