@@ -2,11 +2,11 @@ const passport = require("passport")
 const { Strategy, ExtractJwt } = require("passport-jwt")
 const { databaseApi } = require("../../repository")
 
-const { SECRET_KEY } = require("../../config/dotenv-info")
+const { JWT_SECRET_KEY } = require("../../config/dotenv-config")
 
 const params = {
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-	secretOrKey: SECRET_KEY,
+	secretOrKey: JWT_SECRET_KEY,
 }
 passport.use(
 	new Strategy(params, async (payload, done) => {
