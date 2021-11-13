@@ -30,7 +30,7 @@ class EmailService {
 		const mailGenerator = new Mailgen({
 			theme: "default",
 			product: {
-				name: "Phonebook",
+				name: "Wallet",
 				link: this.link,
 			},
 		})
@@ -38,7 +38,7 @@ class EmailService {
 		const email = {
 			body: {
 				name,
-				intro: "Welcome to your Phonebook! We're very excited to have you on board.",
+				intro: "Welcome to your Wallet! We're very excited to have you on board.",
 				action: {
 					instructions: "To get started , please click here:",
 					button: {
@@ -61,6 +61,7 @@ class EmailService {
 
 		try {
 			const result = await this.sender.send(msg)
+			return true
 		} catch (err) {
 			console.log(err.message)
 			return false
