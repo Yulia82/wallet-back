@@ -34,10 +34,10 @@ const registration = async (req, res, next) => {
 		password,
 	})
 
-	const emailServise = new EmailService(process.env.NODE_ENV, new CreateSenderNodemailer())
+	const emailServise = new EmailService(process.env.NODE_ENV, new CreateSenderSendGrid())
 
 	const statusEmail = await emailServise.sendVerifyEmail(newUser.email, newUser.name, newUser.verifyToken)
-	console.log(statusEmail)
+
 	return res.status(CREATED).json({
 		status: "success",
 		code: CREATED,
@@ -92,69 +92,46 @@ const registration = async (req, res, next) => {
 // 	})
 // }
 
-// const uploadAvatar = async (req, res, next) => {
-// 	const id = String(req.user._id)
-// 	const file = req.file
-// 	const AVATAR_OF_USERS = process.env.AVATAR_OF_USERS
-// 	const destination = path.join(AVATAR_OF_USERS, id)
-// 	await mkdirp(destination)
-// 	const uploadService = new UploadService(destination)
-// 	const avatarURL = await uploadService.save(file, id)
-// 	await Users.updateAvatar(id, avatarURL)
+const verifyUser = async (req, res, next) => {
+	const user = await databaseApi.findUserByVerifyToken(req.params.token)
+	if (user) {
+		await databaseApi.updateTokenVerify(user._id, true, null)
+		return res.status(OK).json({
+			status: "success",
+			code: OK,
+			data: {
+				message: "Success",
+			},
+		})
+	}
+	throw new CustomError(BAD_REQUEST, "Invalid token", errorConstants.BAD_REQUEST)
+}
 
-// 	return res.status(OK).json({
-// 		status: "success",
-// 		code: OK,
-// 		data: { avatarURL },
-// 	})
-// }
+const repeatEmailForVerifyUser = async (req, res, next) => {
+	const { email } = req.body
+	const user = await databaseApi.findUserByEmail(email)
 
-// const verifyUser = async (req, res, next) => {
-// 	try {
-// 		const user = await Users.findUserByVerifyToken(req.params.token)
-// 		if (user) {
-// 			await Users.updateTokenVerify(user._id, true, null)
-// 			return res.status(OK).json({
-// 				status: "success",
-// 				code: OK,
-// 				data: {
-// 					message: "Success",
-// 				},
-// 			})
-// 		}
-// 		return res.status(BAD_REQUEST).json({
-// 			status: "error",
-// 			code: BAD_REQUEST,
-// 			message: "Invalid token",
-// 		})
-// 	} catch (error) {}
-// }
+	if (user) {
+		const { email, name, verifyToken } = user
+		const emailServise = new EmailService(process.env.NODE_ENV, new CreateSenderNodemailer())
 
-// const repeatEmailForVerifyUser = async (req, res, next) => {
-// 	const { email } = req.body
-// 	const user = await Users.findByEmail(email)
+		const statusEmail = await emailServise.sendVerifyEmail(email, name, verifyToken)
+	}
 
-// 	if (user) {
-// 		const { email, name, verifyToken } = user
-// 		const emailServise = new EmailService(process.env.NODE_ENV, new CreateSenderNodemailer())
-
-// 		const statusEmail = await emailServise.sendVerifyEmail(email, name, verifyToken)
-// 	}
-
-// 	return res.status(OK).json({
-// 		status: "success",
-// 		code: OK,
-// 		data: {
-// 			message: "Success",
-// 		},
-// 	})
-// }
+	return res.status(OK).json({
+		status: "success",
+		code: OK,
+		data: {
+			message: "Success",
+		},
+	})
+}
 
 module.exports = {
 	registration,
 	// login,
 	// logout,
 	// getCurrentUser,
-	// verifyUser,
-	// repeatEmailForVerifyUser,
+	verifyUser,
+	repeatEmailForVerifyUser,
 }
