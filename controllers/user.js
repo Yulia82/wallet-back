@@ -93,24 +93,18 @@ const registration = async (req, res, next) => {
 // }
 
 const verifyUser = async (req, res, next) => {
-	try {
-		const user = await databaseApi.findUserByVerifyToken(req.params.token)
-		if (user) {
-			await databaseApi.updateTokenVerify(user._id, true, null)
-			return res.status(OK).json({
-				status: "success",
-				code: OK,
-				data: {
-					message: "Success",
-				},
-			})
-		}
-		return res.status(BAD_REQUEST).json({
-			status: "error",
-			code: BAD_REQUEST,
-			message: "Invalid token",
+	const user = await databaseApi.findUserByVerifyToken(req.params.token)
+	if (user) {
+		await databaseApi.updateTokenVerify(user._id, true, null)
+		return res.status(OK).json({
+			status: "success",
+			code: OK,
+			data: {
+				message: "Success",
+			},
 		})
-	} catch (error) {}
+	}
+	throw new CustomError(BAD_REQUEST, "Invalid token", errorConstants.BAD_REQUEST)
 }
 
 const repeatEmailForVerifyUser = async (req, res, next) => {
