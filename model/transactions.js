@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose")
+const { Schema, model, SchemaTypes } = require("mongoose")
 
 const transactionSchema = new Schema(
 	{
@@ -7,6 +7,7 @@ const transactionSchema = new Schema(
 		sum: { type: Number, required: true },
 		data: { type: String, required: true },
 		balance: { type: Number },
+		owner: { type: SchemaTypes.ObjectId, ref: "user" }, //! Связь транзакций с юзером.
 	},
 	{
 		versionKey: false,
@@ -22,6 +23,6 @@ const transactionSchema = new Schema(
 	},
 )
 
-const Transaction = model("transactions", transactionSchema)
+const TransactionModel = model("transaction", transactionSchema)
 
-module.exports = { Transaction }
+module.exports = TransactionModel

@@ -1,3 +1,4 @@
 const UserModel = require("./user")
-const {} = require("./transactions")
-module.exports = { UserModel }
+const TransactionModel = require("./transactions")
+
+module.exports = { UserModel, TransactionModel }

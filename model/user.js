@@ -1,4 +1,3 @@
-
 const { Schema, model } = require("mongoose")
 const bcrypt = require("bcryptjs")
 const crypto = require("crypto")
@@ -69,4 +68,3 @@ userSchema.methods.isValidPassword = async function (password) {
 const UserModel = new model("user", userSchema)
 
 module.exports = UserModel
-
