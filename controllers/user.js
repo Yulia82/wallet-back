@@ -63,7 +63,7 @@ const login = async (req, res, next) => {
 	const id = user._id
 	const payload = { id }
 	const loginToken = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "5m" })
-	const refreshToken = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "12h" })
+	const refreshToken = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "2h" })
 	await databaseApi.updateToken(id, loginToken, refreshToken)
 
 	return res.status(OK).json({
@@ -76,11 +76,11 @@ const login = async (req, res, next) => {
 	})
 }
 
-// const logout = async (req, res, next) => {
-// 	const id = req.user._id
-// 	await Users.updateToken(id, null)
-// 	return res.status(NO_CONTENT).json()
-// }
+const logout = async (req, res, next) => {
+	const id = req.user._id
+	await databaseApi.updateToken(id, null, null)
+	return res.status(NO_CONTENT).json()
+}
 
 // const getCurrentUser = async (req, res, next) => {
 // 	const { email, subscription } = req.user
@@ -151,7 +151,7 @@ const repeatEmailForVerifyUser = async (req, res, next) => {
 module.exports = {
 	registration,
 	login,
-	// logout,
+	logout,
 	// getCurrentUser,
 	verifyUser,
 	repeatEmailForVerifyUser,
