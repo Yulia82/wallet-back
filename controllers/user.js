@@ -1,3 +1,4 @@
+const crypto = require("crypto")
 const { databaseApi } = require("../repository")
 const { CustomError } = require("../helpers/errorHandler")
 const jwt = require("jsonwebtoken")
@@ -42,7 +43,6 @@ const registration = async (req, res, next) => {
 		status: "success",
 		code: CREATED,
 		data: {
-			id: newUser.id,
 			name: newUser.name,
 			email: newUser.email,
 			successEmail: statusEmail,
@@ -51,31 +51,30 @@ const registration = async (req, res, next) => {
 	})
 }
 
-// const login = async (req, res, next) => {
-// 	const { email, password } = req.body
-// 	const user = await Users.findByEmail(email)
-// 	const isValidPassword = await user?.isValidPassword(password)
+const login = async (req, res, next) => {
+	const { email, password } = req.body
+	const user = await databaseApi.findUserByEmail(email)
+	const isValidPassword = await user?.isValidPassword(password)
 
-// 	if (!user || !isValidPassword || !user?.isVerified) {
-// 		return res.status(UNAUTHORIZED).json({
-// 			status: "error",
-// 			code: UNAUTHORIZED,
-// 			message: "Invalid login or password",
-// 		})
-// 	}
-// 	const id = user._id
-// 	const payload = { id }
-// 	const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1h" })
-// 	await Users.updateToken(id, token)
+	if (!user || !isValidPassword || !user?.isVerified) {
+		throw new CustomError(UNAUTHORIZED, "Invalid login or password", errorConstants.CREDENTIALS_ERROR)
+	}
 
-// 	return res.status(OK).json({
-// 		status: "success",
-// 		code: OK,
-// 		data: {
-// 			token,
-// 		},
-// 	})
-// }
+	const id = user._id
+	const payload = { id }
+	const loginToken = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "5m" })
+	const refreshToken = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "12h" })
+	await databaseApi.updateToken(id, loginToken, refreshToken)
+
+	return res.status(OK).json({
+		status: "success",
+		code: OK,
+		data: {
+			loginToken,
+			refreshToken,
+		},
+	})
+}
 
 // const logout = async (req, res, next) => {
 // 	const id = req.user._id
@@ -93,30 +92,12 @@ const registration = async (req, res, next) => {
 // }
 
 const verifyUser = async (req, res, next) => {
-	const user = await databaseApi.findUserByVerifyToken(req.params.token)
-	if (user) {
-		await databaseApi.updateTokenVerify(user._id, true, null)
-		return res.status(OK).json({
-			status: "success",
-			code: OK,
-			data: {
-				message: "Success",
-			},
-		})
+	const user = await databaseApi.updateTokenVerify(req.params.token)
+	if (!user) {
+		throw new CustomError(BAD_REQUEST, "Invalid token", errorConstants.BAD_REQUEST)
 	}
-	throw new CustomError(BAD_REQUEST, "Invalid token", errorConstants.BAD_REQUEST)
-}
 
-const repeatEmailForVerifyUser = async (req, res, next) => {
-	const { email } = req.body
-	const user = await databaseApi.findUserByEmail(email)
-
-	if (user) {
-		const { email, name, verifyToken } = user
-		const emailServise = new EmailService(process.env.NODE_ENV, new CreateSenderNodemailer())
-
-		const statusEmail = await emailServise.sendVerifyEmail(email, name, verifyToken)
-	}
+	await databaseApi.updateTokenVerify(user._id, true, null)
 
 	return res.status(OK).json({
 		status: "success",
@@ -126,10 +107,50 @@ const repeatEmailForVerifyUser = async (req, res, next) => {
 		},
 	})
 }
+// 	const user = await databaseApi.findUserByVerifyToken(req.params.token)
+// 	if (user) {
+// 		await databaseApi.updateTokenVerify(user._id, true, null)
+// 		return res.status(OK).json({
+// 			status: "success",
+// 			code: OK,
+// 			data: {
+// 				message: "Success",
+// 			},
+// 		})
+// 	}
+// 	throw new CustomError(BAD_REQUEST, "Invalid token", errorConstants.BAD_REQUEST)
+// }
+
+const repeatEmailForVerifyUser = async (req, res, next) => {
+	const { email } = req.body
+	const user = await databaseApi.findUserByEmail(email)
+
+	if (!user) {
+		throw new CustomError(BAD_REQUEST, "User is not Exist", errorConstants.BAD_REQUEST)
+	}
+
+	const { id, name } = user
+	const response = await databaseApi.refreshVerifyToken(id, crypto.randomUUID())
+
+	const emailServise = new EmailService(process.env.NODE_ENV, new CreateSenderNodemailer())
+
+	const statusEmail = await emailServise.sendVerifyEmail(email, name, response.verifyToken)
+
+	return res.status(OK).json({
+		status: "success",
+		code: OK,
+		data: {
+			name,
+			email,
+			successEmail: statusEmail,
+			message: "Check your email and complete registration",
+		},
+	})
+}
 
 module.exports = {
 	registration,
-	// login,
+	login,
 	// logout,
 	// getCurrentUser,
 	verifyUser,

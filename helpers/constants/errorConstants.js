@@ -5,6 +5,7 @@ const ErrorTypes = {
 	CREDENTIALS_ERROR: "credentialsError",
 	WRONG_URL_VERIFY: "wrongVerifyUrl",
 	BAD_REQUEST: "badRequest",
+	NO_CONTENT: "noContent",
 }
 
 module.exports = ErrorTypes
