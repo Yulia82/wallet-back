@@ -7,11 +7,11 @@ const { guard } = require("../../../helpers/guard")
 
 const { wrapperError } = require("../../../helpers/errorHandler")
 
-router.post("/verify", userControllers.repeatEmailForVerifyUser)
+router.post("/verify", wrapperError(userControllers.repeatEmailForVerifyUser))
 router.get("/verify/:token", wrapperError(userControllers.verifyUser))
 
 router.post("/signup", validateUser, wrapperError(userControllers.registration))
-// router.post("/login", loginLimit, login)
+router.post("/login", wrapperError(userControllers.login))
 // router.get("/logout", guard, logout)
 
 // router.get("/current", guard, getCurrentUser)
