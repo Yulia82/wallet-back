@@ -8,8 +8,8 @@ class EmailService {
 		switch (env.NODE_ENV) {
 			case "development":
 				// this.link = " https://5285-91-221-219-76.ngrok.io";
-				// this.link = `http://${env.HOST}:${env.PORT}`
-				this.link = "http://27c7-185-19-6-75.ngrok.io"
+				this.link = `http://${env.HOST}:${env.PORT}`
+				// this.link = "http://27c7-185-19-6-75.ngrok.io"
 
 				break
 			case "production":
@@ -17,8 +17,8 @@ class EmailService {
 
 				break
 			default:
-				// this.link = `http://${env.HOST}:${env.PORT}`
-				this.link = "http://27c7-185-19-6-75.ngrok.io"
+				this.link = `http://${env.HOST}:${env.PORT}`
+				// this.link = "http://27c7-185-19-6-75.ngrok.io"
 
 				break
 		}
@@ -46,7 +46,7 @@ class EmailService {
 					button: {
 						color: "#22BC66", // Optional action button color
 						text: "Confirm your account",
-						// link: `${this.link}/api/users/verify/${verifyToken}`,
+						// link: `http://127.0.0.1:4040/api/user/verify/${verifyToken}`,
 						link: `${this.link}/api/user/verify/${verifyToken}`,
 					},
 				},

@@ -3,7 +3,7 @@ const { databaseApi } = require("../repository")
 const { CustomError } = require("../helpers/errorHandler")
 const jwt = require("jsonwebtoken")
 const path = require("path")
-const { JWT_SECRET_KEY } = require("../config/dotenv-config")
+const ENV = require("../config/dotenv-config")
 const { HttpCode, errorConstants } = require("../helpers/constants")
 
 const { EmailService, CreateSenderNodemailer, CreateSenderSendGrid } = require("../services/email")
@@ -35,7 +35,7 @@ const registration = async (req, res, next) => {
 		password,
 	})
 
-	const emailServise = new EmailService(process.env.NODE_ENV, new CreateSenderSendGrid())
+	const emailServise = new EmailService(ENV, new CreateSenderSendGrid())
 
 	const statusEmail = await emailServise.sendVerifyEmail(newUser.email, newUser.name, newUser.verifyToken)
 
@@ -62,8 +62,8 @@ const login = async (req, res, next) => {
 
 	const id = user._id
 	const payload = { id }
-	const loginToken = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "5m" })
-	const refreshToken = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: "2h" })
+	const loginToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, { expiresIn: "5m" })
+	const refreshToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, { expiresIn: "2h" })
 	await databaseApi.updateToken(id, loginToken, refreshToken)
 
 	return res.status(OK).json({
@@ -132,9 +132,9 @@ const repeatEmailForVerifyUser = async (req, res, next) => {
 	const { id, name } = user
 	const response = await databaseApi.refreshVerifyToken(id, crypto.randomUUID())
 
-	const emailServise = new EmailService(process.env.NODE_ENV, new CreateSenderNodemailer())
+	const emailService = new EmailService(ENV, new CreateSenderNodemailer())
 
-	const statusEmail = await emailServise.sendVerifyEmail(email, name, response.verifyToken)
+	const statusEmail = await emailService.sendVerifyEmail(email, name, response.verifyToken)
 
 	return res.status(OK).json({
 		status: "success",
