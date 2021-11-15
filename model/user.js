@@ -65,6 +65,6 @@ userSchema.methods.isValidPassword = async function (password) {
 	return bcrypt.compare(password, this.password)
 }
 
-const UserModel = new model("user", userSchema)
+const UserModel = model("user", userSchema)
 
 module.exports = UserModel
