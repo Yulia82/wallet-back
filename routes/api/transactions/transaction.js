@@ -6,7 +6,7 @@ const { guard } = require("../../../helpers/guard")
 
 router.post("/", guard, validateTransaction, transactionControllers.saveTransaction)
 router.get("/", () => {})
-router.get("/:transactionId", () => {})
+router.get("/:transactionId", guard, validateId, transactionControllers.getTransaction)
 router.delete("/:transactionId", guard, validateId, transactionControllers.deleteTransaction)
 router.put("/:transactionId", () => {})
 
