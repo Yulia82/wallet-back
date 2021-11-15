@@ -1,3 +1,3 @@
 const userControllers = require("./user")
-const {} = require("./transactions")
-module.exports = { userControllers }
+const transactionControllers = require("./transactions")
+module.exports = { userControllers, transactionControllers }
