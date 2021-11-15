@@ -50,7 +50,7 @@ const changeTransaction = async (req, res, next) => {
 const deleteTransaction = async (req, res, next) => {
 	try {
 		const userId = req.user._id
-		const transaction = await databaseApi.removeTransaction(req.params.id, userId)
+		const transaction = await databaseApi.removeTransaction(req.params.transactionId, userId)
 		if (transaction) {
 			res.status(200).json({ status: "success", code: 200, data: { transaction } })
 		}

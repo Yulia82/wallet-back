@@ -5,7 +5,7 @@ const transactionSchema = new Schema(
 		type: { type: String, required: true },
 		category: { type: String, required: true },
 		sum: { type: Number, required: true },
-		data: { type: String, required: true },
+		date: { type: String, required: true },
 		balance: { type: Number },
 		owner: { type: SchemaTypes.ObjectId, ref: "user" }, //! Связь транзакций с юзером.
 	},
