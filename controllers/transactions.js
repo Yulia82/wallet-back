@@ -27,6 +27,7 @@ const saveTransaction = async (req, res, next) => {
 	try {
 		const userId = req.user._id
 		const transaction = await databaseApi.createTransaction({ ...req.body, owner: userId })
+		console.log(transaction)
 		res.status(201).json({ status: "success", code: 201, data: { transaction } })
 	} catch (error) {
 		next(error)
