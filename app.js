@@ -18,8 +18,8 @@ app.use(express.json())
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use("/api/user", userRouter)
 app.use("/api/transaction", transactionsRouter)
-app.get("/", (req, res, next) => {
-	return res.send("hello")
+app.use("/", (req, res, next) => {
+	res.send("hello")
 })
 
 app.use((req, res) => {
