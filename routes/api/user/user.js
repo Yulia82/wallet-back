@@ -14,6 +14,6 @@ router.post("/signup", validateUser, wrapperError(userControllers.registration))
 router.post("/login", validateCredentials, wrapperError(userControllers.login))
 router.get("/logout", guard, userControllers.logout)
 
-// router.get("/current", guard, getCurrentUser)
+router.get("/current", guard, userControllers.getCurrentUser)
 
 module.exports = router
