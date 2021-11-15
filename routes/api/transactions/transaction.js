@@ -8,6 +8,6 @@ router.post("/", guard, validateTransaction, transactionControllers.saveTransact
 router.get("/", guard, transactionControllers.getTransactions)
 router.get("/:transactionId", guard, validateId, transactionControllers.getTransaction)
 router.delete("/:transactionId", guard, validateId, transactionControllers.deleteTransaction)
-router.put("/:transactionId", () => {})
+router.put("/:transactionId", guard, validateId, validateTransaction, transactionControllers.changeTransaction)
 
 module.exports = router

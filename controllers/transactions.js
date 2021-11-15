@@ -37,7 +37,7 @@ const saveTransaction = async (req, res, next) => {
 const changeTransaction = async (req, res, next) => {
 	try {
 		const userId = req.user._id
-		const transaction = databaseApi.updateTransaction(req.params.id, req.body, userId)
+		const transaction = databaseApi.updateTransaction(req.params.transactionId, req.body, userId)
 		if (transaction) {
 			return res.status(200).json({ status: "success", code: 200, data: { transaction } })
 		}
