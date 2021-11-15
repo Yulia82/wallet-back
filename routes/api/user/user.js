@@ -12,7 +12,7 @@ router.get("/verify/:token", wrapperError(userControllers.verifyUser))
 
 router.post("/signup", validateUser, wrapperError(userControllers.registration))
 router.post("/login", wrapperError(userControllers.login))
-// router.get("/logout", guard, logout)
+router.post("/logout", guard, userControllers.logout)
 
 // router.get("/current", guard, getCurrentUser)
 
