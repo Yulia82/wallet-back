@@ -13,7 +13,7 @@ class EmailService {
 
 				break
 			case "production":
-				this.link = "link for production"
+				this.link = "https://wallet-coconat.herokuapp.com"
 
 				break
 			default:
