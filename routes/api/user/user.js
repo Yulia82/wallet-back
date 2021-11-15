@@ -1,4 +1,4 @@
-const { validateUser } = require("../../validation")
+const { validateUser, validateCredentials, validateEmailBeforeVerify } = require("../../validation")
 const express = require("express")
 const router = express.Router()
 const { userControllers } = require("../../../controllers")
@@ -7,12 +7,12 @@ const { guard } = require("../../../helpers/guard")
 
 const { wrapperError } = require("../../../helpers/errorHandler")
 
-router.post("/verify", wrapperError(userControllers.repeatEmailForVerifyUser))
+router.post("/verify", validateEmailBeforeVerify, wrapperError(userControllers.repeatEmailForVerifyUser))
 router.get("/verify/:token", wrapperError(userControllers.verifyUser))
 
 router.post("/signup", validateUser, wrapperError(userControllers.registration))
-router.post("/login", wrapperError(userControllers.login))
-router.post("/logout", guard, userControllers.logout)
+router.post("/login", validateCredentials, wrapperError(userControllers.login))
+router.get("/logout", guard, userControllers.logout)
 
 // router.get("/current", guard, getCurrentUser)
 
