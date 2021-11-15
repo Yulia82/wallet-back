@@ -1,6 +1,3 @@
 require("dotenv").config()
-console.log(111111111111)
-// console.log(222222222222, process)
-console.log(333333333333, process.host)
-console.log(444444444444)
+console.log("HOST змінено на локалхост бо при деплої були проблеми ")
 module.exports = { PORT: 4040, ...process.env }
