@@ -8,7 +8,7 @@ class EmailService {
 		switch (env.NODE_ENV) {
 			case "development":
 				// this.link = " https://5285-91-221-219-76.ngrok.io";
-				this.link = `http://${env.HOST}:${env.PORT}`
+				this.link = `http://localhost:${env.PORT}`
 				// this.link = "http://27c7-185-19-6-75.ngrok.io"
 
 				break
@@ -17,7 +17,7 @@ class EmailService {
 
 				break
 			default:
-				this.link = `http://${env.HOST}:${env.PORT}`
+				this.link = `http://localhost:${env.PORT}`
 				// this.link = "http://27c7-185-19-6-75.ngrok.io"
 
 				break
