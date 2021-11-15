@@ -23,6 +23,6 @@ const transactionSchema = new Schema(
 	},
 )
 
-const TransactionModel = new model("transaction", transactionSchema)
+const TransactionModel = model("transaction", transactionSchema)
 
 module.exports = TransactionModel
