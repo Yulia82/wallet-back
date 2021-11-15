@@ -13,7 +13,7 @@ class EmailService {
 
 				break
 			case "production":
-				this.link = "link for production"
+				this.link = "https://wallet-coconat.herokuapp.com"
 
 				break
 			default:
@@ -46,7 +46,7 @@ class EmailService {
 					button: {
 						color: "#22BC66", // Optional action button color
 						text: "Confirm your account",
-						// link: `${this.link}/api/users/verify/${verifyToken}`,
+						// link: `http://127.0.0.1:4040/api/user/verify/${verifyToken}`,
 						link: `${this.link}/api/user/verify/${verifyToken}`,
 					},
 				},

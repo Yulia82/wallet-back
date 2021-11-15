@@ -11,7 +11,7 @@
 	},
 	"consumes": ["application/json"],
 	"produces": ["application/json"],
-	"servers": [{ "url": "http://127.0.0.1:4040" }],
+	"servers": [{ "url": "https://wallet-coconat.herokuapp.com" }],
 	"tags": [
 		{
 			"name": "Auth",

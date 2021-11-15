@@ -62,7 +62,9 @@ const login = async (req, res, next) => {
 
 	const id = user._id
 	const payload = { id }
+
 	const loginToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, { expiresIn: "1h" })
+
 	const refreshToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, { expiresIn: "2h" })
 	await databaseApi.updateToken(id, loginToken, refreshToken)
 
@@ -132,9 +134,9 @@ const repeatEmailForVerifyUser = async (req, res, next) => {
 	const { id, name } = user
 	const response = await databaseApi.refreshVerifyToken(id, crypto.randomUUID())
 
-	const emailServise = new EmailService(ENV, new CreateSenderNodemailer())
+	const emailService = new EmailService(ENV, new CreateSenderNodemailer())
 
-	const statusEmail = await emailServise.sendVerifyEmail(email, name, response.verifyToken)
+	const statusEmail = await emailService.sendVerifyEmail(email, name, response.verifyToken)
 
 	return res.status(OK).json({
 		status: "success",

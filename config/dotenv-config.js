@@ -1,3 +1,3 @@
 require("dotenv").config()
-
-module.exports = { HOST: "127.0.0.1", PORT: 4040, ...process.env }
+console.log("HOST змінено на локалхост бо при деплої були проблеми ")
+module.exports = { PORT: 4040, ...process.env }
