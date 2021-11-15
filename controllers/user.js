@@ -84,14 +84,14 @@ const logout = async (req, res, next) => {
 	return res.status(NO_CONTENT).json()
 }
 
-// const getCurrentUser = async (req, res, next) => {
-// 	const { email, subscription } = req.user
-// 	return res.status(OK).json({
-// 		status: "success",
-// 		code: OK,
-// 		data: { email, subscription },
-// 	})
-// }
+const getCurrentUser = async (req, res, next) => {
+	const { name, email, balance } = req.user
+	return res.status(OK).json({
+		status: "success",
+		code: OK,
+		data: { name, email, balance },
+	})
+}
 
 const verifyUser = async (req, res, next) => {
 	const user = await databaseApi.updateTokenVerify(req.params.token)
@@ -109,19 +109,6 @@ const verifyUser = async (req, res, next) => {
 		},
 	})
 }
-// 	const user = await databaseApi.findUserByVerifyToken(req.params.token)
-// 	if (user) {
-// 		await databaseApi.updateTokenVerify(user._id, true, null)
-// 		return res.status(OK).json({
-// 			status: "success",
-// 			code: OK,
-// 			data: {
-// 				message: "Success",
-// 			},
-// 		})
-// 	}
-// 	throw new CustomError(BAD_REQUEST, "Invalid token", errorConstants.BAD_REQUEST)
-// }
 
 const repeatEmailForVerifyUser = async (req, res, next) => {
 	const { email } = req.body
@@ -154,7 +141,7 @@ module.exports = {
 	registration,
 	login,
 	logout,
-	// getCurrentUser,
+	getCurrentUser,
 	verifyUser,
 	repeatEmailForVerifyUser,
 }
