@@ -5,7 +5,7 @@ const { validateTransaction, validateId } = require("../../validation")
 const { guard } = require("../../../helpers/guard")
 
 router.post("/", guard, validateTransaction, transactionControllers.saveTransaction)
-router.get("/", () => {})
+router.get("/", guard, transactionControllers.getTransactions)
 router.get("/:transactionId", guard, validateId, transactionControllers.getTransaction)
 router.delete("/:transactionId", guard, validateId, transactionControllers.deleteTransaction)
 router.put("/:transactionId", () => {})
