@@ -62,7 +62,9 @@ const login = async (req, res, next) => {
 
 	const id = user._id
 	const payload = { id }
-	const loginToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, { expiresIn: "5m" })
+
+	const loginToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, { expiresIn: "1h" })
+
 	const refreshToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, { expiresIn: "2h" })
 	await databaseApi.updateToken(id, loginToken, refreshToken)
 
