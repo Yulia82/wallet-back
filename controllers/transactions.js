@@ -1,63 +1,44 @@
 const { databaseApi } = require("../repository")
+const { CustomError } = require("../helpers/errorHandler")
+const { HttpCode, errorConstants } = require("../helpers/constants")
 
-const getTransactions = async (req, res, next) => {
-	try {
-		const userId = req.user._id
-		const transactions = await databaseApi.getAllTransaction(userId)
-		res.json({ status: "success", code: 200, data: { transactions } })
-	} catch (error) {
-		next(error)
-	}
+const getTransactions = async (req, res) => {
+	const userId = req.user._id
+	const transactions = await databaseApi.getAllTransaction(userId)
+	res.json({ status: "success", code: HttpCode.OK, data: { transactions } })
 }
 
-const getTransaction = async (req, res, next) => {
-	try {
-		const userId = req.user._id
-		const transaction = await databaseApi.getTransactionById(req.params.transactionId, userId)
-		if (transaction) {
-			return res.status(200).json({ status: "success", code: 200, data: { transaction } })
-		}
-		return res.status(404).json({ status: "error", code: 404, message: "Transaction not found" })
-	} catch (error) {
-		next(error)
+const getTransaction = async (req, res) => {
+	const userId = req.user._id
+	const transaction = await databaseApi.getTransactionById(req.params.transactionId, userId)
+	if (transaction) {
+		return res.status(HttpCode.OK).json({ status: "success", code: HttpCode.OK, data: { transaction } })
 	}
+	throw new CustomError(HttpCode.NOT_FOUND, "Transaction not found")
 }
 
-const saveTransaction = async (req, res, next) => {
-	try {
-		const userId = req.user._id
-		const transaction = await databaseApi.createTransaction({ ...req.body, owner: userId })
-		console.log(transaction)
-		res.status(201).json({ status: "success", code: 201, data: { transaction } })
-	} catch (error) {
-		next(error)
-	}
+const saveTransaction = async (req, res) => {
+	const userId = req.user._id
+	const transaction = await databaseApi.createTransaction({ ...req.body, owner: userId })
+	res.status(HttpCode.CREATED).json({ status: "success", code: HttpCode.CREATED, data: { transaction } })
 }
 
-const changeTransaction = async (req, res, next) => {
-	try {
-		const userId = req.user._id
-		const transaction = databaseApi.updateTransaction(req.params.transactionId, req.body, userId)
-		if (transaction) {
-			return res.status(200).json({ status: "success", code: 200, data: { transaction } })
-		}
-		return res.status(404).json({ status: "error", code: 404, message: "Not found" })
-	} catch (error) {
-		next(error)
+const changeTransaction = async (req, res) => {
+	const userId = req.user._id
+	const transaction = databaseApi.updateTransaction(req.params.transactionId, req.body, userId)
+	if (transaction) {
+		return res.status(HttpCode.OK).json({ status: "success", code: HttpCode.OK, data: { transaction } })
 	}
+	throw new CustomError(HttpCode.NOT_FOUND, "Transaction not found")
 }
 
-const deleteTransaction = async (req, res, next) => {
-	try {
-		const userId = req.user._id
-		const transaction = await databaseApi.removeTransaction(req.params.transactionId, userId)
-		if (transaction) {
-			return res.status(200).json({ status: "success", code: 200, data: { transaction } })
-		}
-		return res.status(404).json({ status: "error", code: 404, message: "Not found" })
-	} catch (error) {
-		next(error)
+const deleteTransaction = async (req, res) => {
+	const userId = req.user._id
+	const transaction = await databaseApi.removeTransaction(req.params.transactionId, userId)
+	if (transaction) {
+		return res.status(HttpCode.OK).json({ status: "success", code: HttpCode.OK, data: { transaction } })
 	}
+	throw new CustomError(HttpCode.NOT_FOUND, "Transaction not found")
 }
 
 module.exports = { getTransactions, getTransaction, saveTransaction, changeTransaction, deleteTransaction }
