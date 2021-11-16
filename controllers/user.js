@@ -13,6 +13,7 @@ const {
 	CREATED,
 	ACCEPTED,
 	NO_CONTENT,
+	REDIRECT,
 	BAD_REQUEST,
 	UNAUTHORIZED,
 	FORBIDDEN,
@@ -42,7 +43,7 @@ const registration = async (req, res, next) => {
 	return res.status(CREATED).json({
 		status: "success",
 		code: CREATED,
-		data: {
+		user: {
 			name: newUser.name,
 			email: newUser.email,
 			successEmail: statusEmail,
@@ -71,7 +72,7 @@ const login = async (req, res, next) => {
 	return res.status(OK).json({
 		status: "success",
 		code: OK,
-		data: {
+		user: {
 			loginToken,
 			refreshToken,
 		},
@@ -89,7 +90,7 @@ const getCurrentUser = async (req, res, next) => {
 	return res.status(OK).json({
 		status: "success",
 		code: OK,
-		data: { name, email, balance },
+		user: { name, email, balance },
 	})
 }
 
@@ -101,13 +102,7 @@ const verifyUser = async (req, res, next) => {
 
 	await databaseApi.updateTokenVerify(user._id, true, null)
 
-	return res.status(OK).json({
-		status: "success",
-		code: OK,
-		data: {
-			message: "Success",
-		},
-	})
+	return res.redirect(REDIRECT, "https://www.linkedin.com/")
 }
 
 const repeatEmailForVerifyUser = async (req, res, next) => {
