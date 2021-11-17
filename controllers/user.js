@@ -27,7 +27,7 @@ const registration = async (req, res, next) => {
 	const user = await databaseApi.findUserByEmail(email)
 
 	if (user) {
-		throw new CustomError(CONFLICT, "Email is use", errorConstants.EXIST_USER_ERROR)
+		throw new CustomError(CONFLICT, "Email is already exist", errorConstants.EXIST_USER_ERROR)
 	}
 
 	const newUser = await databaseApi.registration({
@@ -102,7 +102,7 @@ const verifyUser = async (req, res, next) => {
 
 	await databaseApi.updateTokenVerify(user._id, true, null)
 
-	return res.redirect(REDIRECT, "https://www.linkedin.com/")
+	return res.status(REDIRECT).redirect("http://localhost:3000/login")
 }
 
 const repeatEmailForVerifyUser = async (req, res, next) => {

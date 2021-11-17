@@ -18,12 +18,17 @@ const wrapperError = fn => async (req, res, next) => {
 				res.status(e.status).json({
 					Status: "error",
 					code: e.status,
-					response: {
-						message: e.message,
-					},
+					message: e.message,
 				})
 				break
 			case errorConstants.CREDENTIALS_ERROR:
+				res.status(e.status).json({
+					status: "error",
+					code: e.status,
+					message: e.message,
+				})
+				break
+			case errorConstants.BAD_REQUEST:
 				res.status(e.status).json({
 					status: "error",
 					code: e.status,
