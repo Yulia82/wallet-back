@@ -43,7 +43,7 @@ const registration = async (req, res, next) => {
 	return res.status(CREATED).json({
 		status: "success",
 		code: CREATED,
-		user: {
+		response: {
 			name: newUser.name,
 			email: newUser.email,
 			successEmail: statusEmail,
@@ -72,7 +72,7 @@ const login = async (req, res, next) => {
 	return res.status(OK).json({
 		status: "success",
 		code: OK,
-		user: {
+		response: {
 			loginToken,
 			refreshToken,
 		},
@@ -90,7 +90,7 @@ const getCurrentUser = async (req, res, next) => {
 	return res.status(OK).json({
 		status: "success",
 		code: OK,
-		user: { name, email, balance },
+		response: { name, email, balance },
 	})
 }
 
@@ -123,7 +123,7 @@ const repeatEmailForVerifyUser = async (req, res, next) => {
 	return res.status(OK).json({
 		status: "success",
 		code: OK,
-		data: {
+		response: {
 			name,
 			email,
 			successEmail: statusEmail,
