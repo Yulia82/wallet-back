@@ -48,7 +48,7 @@ function sendError(res) {
 	return res.status(HttpCode.UNAUTHORIZED).json({
 		status: "error",
 		code: HttpCode.UNAUTHORIZED,
-		message: "Invalid login or password",
+		message: "Invalid Authorization",
 	})
 }
 
