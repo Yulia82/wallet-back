@@ -2,7 +2,7 @@ const crypto = require("crypto")
 const { databaseApi } = require("../repository")
 const { CustomError } = require("../helpers/errorHandler")
 const jwt = require("jsonwebtoken")
-const path = require("path")
+
 const ENV = require("../config/dotenv-config")
 const { HttpCode, errorConstants } = require("../helpers/constants")
 

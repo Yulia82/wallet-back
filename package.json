@@ -7,7 +7,8 @@
 		"start:dev": "cross-env NODE_ENV=development nodemon ./bin/server.js",
 		"lint": "eslint **/*.js",
 		"lint:fix": "eslint --fix **/*.js",
-		"deploy": "git push heroku deploy:main"
+		"deploy": "git push heroku deploy:main",
+		"logs": "heroku logs --tail"
 	},
 	"dependencies": {
 		"@sendgrid/mail": "^7.6.0",
