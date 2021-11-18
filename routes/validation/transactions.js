@@ -1,12 +1,16 @@
+const { valid } = require("joi")
 const Joi = require("joi")
 Joi.objectId = require("joi-objectid")(Joi)
 const {
 	validateConstants: { validTransactionConst },
+	categoriesConstants: { categoryIncrement, categoryDecrement },
 } = require("../../helpers/constants")
 
 const schemaTransaction = Joi.object({
 	type: Joi.string().min(validTransactionConst.TYPE_NUMBER).max(validTransactionConst.TYPE_NUMBER).required(),
-	category: Joi.string().min(validTransactionConst.MIN_LENGTH).max(validTransactionConst.MAX_LENGTH).required(),
+	category: Joi.string()
+		.valid(...Object.keys(categoryIncrement), ...Object.keys(categoryDecrement))
+		.required(),
 	sum: Joi.number().integer().min(validTransactionConst.MIN_SUM).max(validTransactionConst.MAX_SUM).required(),
 	date: Joi.date().max("now"),
 	balance: Joi.number().integer().min(validTransactionConst.MIN_SUM).max(validTransactionConst.MAX_SUM).required(),

@@ -4,7 +4,7 @@ const { CustomError } = require("../helpers/errorHandler")
 const jwt = require("jsonwebtoken")
 
 const ENV = require("../config/dotenv-config")
-const { HttpCode, errorConstants } = require("../helpers/constants")
+const { HttpCode, errorConstants, categoriesConstants } = require("../helpers/constants")
 
 const { EmailService, CreateSenderNodemailer, CreateSenderSendGrid } = require("../services/email")
 
@@ -67,7 +67,7 @@ const login = async (req, res, next) => {
 	const loginToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, { expiresIn: "10m" })
 
 	const refreshToken = jwt.sign(payload, ENV.JWT_REFRESH_SECRET_KEY, { expiresIn: "30m" })
-	const response = await databaseApi.updateToken(id, loginToken, refreshToken)
+	await databaseApi.updateToken(id, loginToken, refreshToken)
 
 	return res
 		.cookie("refreshToken", refreshToken, { maxAge: Date.now() + 30 * 60 * 1000 })
@@ -76,6 +76,7 @@ const login = async (req, res, next) => {
 			status: "success",
 			code: OK,
 			loginToken,
+			response: categoriesConstants.categoryKeys,
 		})
 }
 

@@ -5,10 +5,10 @@ const { JWT_SECRET_KEY, JWT_REFRESH_SECRET_KEY } = require("../../config/dotenv-
 const jwt = require("jsonwebtoken")
 
 const guard = async (req, res, next) => {
-	let token = getAccessToken(req)
+	let AccessToken = getAccessToken(req)
 
-	if (!token) return sendError(res)
-	const isAccessToken = jwt.verify(token, JWT_SECRET_KEY, (err, decoded) => {
+	if (!AccessToken) return sendError(res)
+	const isAccessToken = jwt.verify(AccessToken, JWT_SECRET_KEY, (err, decoded) => {
 		if (err) return null
 
 		return decoded
@@ -22,9 +22,9 @@ const guard = async (req, res, next) => {
 		return next()
 	}
 
-	token = getRefreshToken(req)
+	const RefreshToken = getRefreshToken(req)
 
-	const isRefreshToken = jwt.verify(token, JWT_REFRESH_SECRET_KEY, (err, decoded) => {
+	const isRefreshToken = jwt.verify(RefreshToken, JWT_REFRESH_SECRET_KEY, (err, decoded) => {
 		if (err) return null
 
 		return decoded
@@ -33,6 +33,8 @@ const guard = async (req, res, next) => {
 	if (isRefreshToken) {
 		const user = await databaseApi.findUserById(isRefreshToken.id)
 		if (!user) return sendError(res)
+
+		if (user.loginToken !== AccessToken) return sendError(res)
 		req.user = await userControllers.refreshLoginToken(isRefreshToken.id)
 
 		res.cookie("refreshToken", req.user.refreshToken, { maxAge: Date.now() + 30 * 60 * 1000 })
@@ -46,7 +48,7 @@ function sendError(res) {
 	return res.status(HttpCode.UNAUTHORIZED).json({
 		status: "error",
 		code: HttpCode.UNAUTHORIZED,
-		message: "Invalid login or password",
+		message: "Invalid Authorization",
 	})
 }
 
