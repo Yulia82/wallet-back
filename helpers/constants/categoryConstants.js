@@ -2,11 +2,11 @@ const categoryDecrement = { regular: "Регулярный доход", irregula
 const categoryIncrement = { any: "Разное", auto: "Машина", products: "Продукты" }
 
 const categoryKeys = {
-	categoryDecrement: Object.entries(categoriesConstants.categoryDecrement).flatMap(arr => ({
+	categoryDecrement: Object.entries(categoryDecrement).flatMap(arr => ({
 		type: arr[0],
 		value: arr[1],
 	})),
-	categoryIncrement: Object.entries(categoriesConstants.categoryIncrement).flatMap(arr => ({
+	categoryIncrement: Object.entries(categoryIncrement).flatMap(arr => ({
 		type: arr[0],
 		value: arr[1],
 	})),
