@@ -2,7 +2,7 @@ const crypto = require("crypto")
 const { databaseApi } = require("../repository")
 const { CustomError } = require("../helpers/errorHandler")
 const jwt = require("jsonwebtoken")
-const path = require("path")
+
 const ENV = require("../config/dotenv-config")
 const { HttpCode, errorConstants } = require("../helpers/constants")
 
@@ -13,6 +13,7 @@ const {
 	CREATED,
 	ACCEPTED,
 	NO_CONTENT,
+	REDIRECT,
 	BAD_REQUEST,
 	UNAUTHORIZED,
 	FORBIDDEN,
@@ -26,7 +27,7 @@ const registration = async (req, res, next) => {
 	const user = await databaseApi.findUserByEmail(email)
 
 	if (user) {
-		throw new CustomError(CONFLICT, "Email is use", errorConstants.EXIST_USER_ERROR)
+		throw new CustomError(CONFLICT, "Email is already exist", errorConstants.EXIST_USER_ERROR)
 	}
 
 	const newUser = await databaseApi.registration({
@@ -42,7 +43,7 @@ const registration = async (req, res, next) => {
 	return res.status(CREATED).json({
 		status: "success",
 		code: CREATED,
-		data: {
+		response: {
 			name: newUser.name,
 			email: newUser.email,
 			successEmail: statusEmail,
@@ -63,33 +64,45 @@ const login = async (req, res, next) => {
 	const id = user._id
 	const payload = { id }
 
-	const loginToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, { expiresIn: "1h" })
+	const loginToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, { expiresIn: "10m" })
 
-	const refreshToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, { expiresIn: "2h" })
-	await databaseApi.updateToken(id, loginToken, refreshToken)
+	const refreshToken = jwt.sign(payload, ENV.JWT_REFRESH_SECRET_KEY, { expiresIn: "30m" })
+	const response = await databaseApi.updateToken(id, loginToken, refreshToken)
 
-	return res.status(OK).json({
-		status: "success",
-		code: OK,
-		data: {
+	return res
+		.cookie("refreshToken", refreshToken, { maxAge: Date.now() + 30 * 60 * 1000 })
+		.status(OK)
+		.json({
+			status: "success",
+			code: OK,
 			loginToken,
-			refreshToken,
-		},
-	})
+		})
+}
+
+const refreshLoginToken = async id => {
+	const payload = { id }
+
+	const loginToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, { expiresIn: "10m" })
+
+	const refreshToken = jwt.sign(payload, ENV.JWT_REFRESH_SECRET_KEY, { expiresIn: "30m" })
+	const result = await databaseApi.updateToken(id, loginToken, refreshToken)
+
+	return result
 }
 
 const logout = async (req, res, next) => {
-	const id = req.user._id
+	const id = req.user.id
 	await databaseApi.updateToken(id, null, null)
 	return res.status(NO_CONTENT).json()
 }
 
 const getCurrentUser = async (req, res, next) => {
-	const { name, email, balance } = req.user
+	const { name, email, balance, loginToken } = req.user
 	return res.status(OK).json({
 		status: "success",
 		code: OK,
-		data: { name, email, balance },
+		loginToken,
+		response: { name, email, balance },
 	})
 }
 
@@ -101,13 +114,7 @@ const verifyUser = async (req, res, next) => {
 
 	await databaseApi.updateTokenVerify(user._id, true, null)
 
-	return res.status(OK).json({
-		status: "success",
-		code: OK,
-		data: {
-			message: "Success",
-		},
-	})
+	return res.status(REDIRECT).redirect("http://localhost:3000/login")
 }
 
 const repeatEmailForVerifyUser = async (req, res, next) => {
@@ -128,7 +135,7 @@ const repeatEmailForVerifyUser = async (req, res, next) => {
 	return res.status(OK).json({
 		status: "success",
 		code: OK,
-		data: {
+		response: {
 			name,
 			email,
 			successEmail: statusEmail,
@@ -144,4 +151,5 @@ module.exports = {
 	getCurrentUser,
 	verifyUser,
 	repeatEmailForVerifyUser,
+	refreshLoginToken,
 }
