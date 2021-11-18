@@ -64,32 +64,44 @@ const login = async (req, res, next) => {
 	const id = user._id
 	const payload = { id }
 
-	const loginToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, { expiresIn: "1h" })
+	const loginToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, { expiresIn: "10m" })
 
-	const refreshToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, { expiresIn: "2h" })
-	await databaseApi.updateToken(id, loginToken, refreshToken)
+	const refreshToken = jwt.sign(payload, ENV.JWT_REFRESH_SECRET_KEY, { expiresIn: "30m" })
+	const response = await databaseApi.updateToken(id, loginToken, refreshToken)
 
-	return res.status(OK).json({
-		status: "success",
-		code: OK,
-		response: {
+	return res
+		.cookie("refreshToken", refreshToken, { maxAge: Date.now() + 30 * 60 * 1000 })
+		.status(OK)
+		.json({
+			status: "success",
+			code: OK,
 			loginToken,
-			refreshToken,
-		},
-	})
+		})
+}
+
+const refreshLoginToken = async id => {
+	const payload = { id }
+
+	const loginToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, { expiresIn: "10m" })
+
+	const refreshToken = jwt.sign(payload, ENV.JWT_REFRESH_SECRET_KEY, { expiresIn: "30m" })
+	const result = await databaseApi.updateToken(id, loginToken, refreshToken)
+
+	return result
 }
 
 const logout = async (req, res, next) => {
-	const id = req.user._id
+	const id = req.user.id
 	await databaseApi.updateToken(id, null, null)
 	return res.status(NO_CONTENT).json()
 }
 
 const getCurrentUser = async (req, res, next) => {
-	const { name, email, balance } = req.user
+	const { name, email, balance, loginToken } = req.user
 	return res.status(OK).json({
 		status: "success",
 		code: OK,
+		loginToken,
 		response: { name, email, balance },
 	})
 }
@@ -139,4 +151,5 @@ module.exports = {
 	getCurrentUser,
 	verifyUser,
 	repeatEmailForVerifyUser,
+	refreshLoginToken,
 }

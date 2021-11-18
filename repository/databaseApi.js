@@ -1,4 +1,4 @@
-const { UserModel, TransactionModel } = require("../model")
+const { UserModel, TransactionModel, TokenModel } = require("../model")
 
 class DatabaseApi {
 	//* create new user
@@ -73,6 +73,12 @@ class DatabaseApi {
 		)
 		return result
 	}
+	//* findRefresh token
+	findRefreshToken = id => TokenModel.findOne({ owner: id })
+	//* update refreshToken
+	updateRefreshToken = (id, refreshToken) => TokenModel.findByIdAndUpdate(id, { refreshToken })
+	//* delete refresh token
+	removeRefreshToken = id => TokenModel.findByIdAndRemove(id)
 }
 
 module.exports = new DatabaseApi()

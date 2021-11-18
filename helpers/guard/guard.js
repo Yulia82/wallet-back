@@ -1,21 +1,61 @@
-const passport = require("passport")
-
-require("./passport-config")
 const HttpCode = require("../constants/httpConstants")
+const { userControllers } = require("../../controllers")
+const { databaseApi } = require("../../repository")
+const { JWT_SECRET_KEY, JWT_REFRESH_SECRET_KEY } = require("../../config/dotenv-config")
+const jwt = require("jsonwebtoken")
 
-const guard = (req, res, next) => {
-	passport.authenticate("jwt", { session: false }, (error, user) => {
-		const token = req.get("Authorization")?.split(" ")[1]
-		if (!user || error || token !== user.loginToken) {
-			return res.status(HttpCode.UNAUTHORIZED).json({
-				status: "error",
-				code: HttpCode.UNAUTHORIZED,
-				message: "Invalid login or password",
-			})
-		}
+const guard = async (req, res, next) => {
+	let token = getAccessToken(req)
+
+	if (!token) return sendError(res)
+	const isAccessToken = jwt.verify(token, JWT_SECRET_KEY, (err, decoded) => {
+		if (err) return null
+
+		return decoded
+	})
+
+	if (isAccessToken) {
+		const user = await databaseApi.findUserById(isAccessToken.id)
+		if (!user) return sendError(res)
 		req.user = user
+
 		return next()
-	})(req, res, next)
+	}
+
+	token = getRefreshToken(req)
+
+	const isRefreshToken = jwt.verify(token, JWT_REFRESH_SECRET_KEY, (err, decoded) => {
+		if (err) return null
+
+		return decoded
+	})
+
+	if (isRefreshToken) {
+		const user = await databaseApi.findUserById(isRefreshToken.id)
+		if (!user) return sendError(res)
+		req.user = await userControllers.refreshLoginToken(isRefreshToken.id)
+
+		res.cookie("refreshToken", req.user.refreshToken, { maxAge: Date.now() + 30 * 60 * 1000 })
+
+		return next()
+	}
+	return sendError(res)
+}
+
+function sendError(res) {
+	return res.status(HttpCode.UNAUTHORIZED).json({
+		status: "error",
+		code: HttpCode.UNAUTHORIZED,
+		message: "Invalid login or password",
+	})
+}
+
+function getAccessToken(req) {
+	return req.get("Authorization")?.split(" ")[1]
+}
+
+function getRefreshToken(req) {
+	return req.get("Cookie").split("=")[1]
 }
 
 module.exports = guard
