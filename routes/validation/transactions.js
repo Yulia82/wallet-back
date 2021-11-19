@@ -7,13 +7,16 @@ const {
 } = require("../../helpers/constants")
 
 const schemaTransaction = Joi.object({
-	type: Joi.string().min(validTransactionConst.TYPE_NUMBER).max(validTransactionConst.TYPE_NUMBER).required(),
+	type: Joi.boolean().required(),
 	category: Joi.string()
 		.valid(...Object.keys(categoryIncrement), ...Object.keys(categoryDecrement))
 		.required(),
-	sum: Joi.number().integer().min(validTransactionConst.MIN_SUM).max(validTransactionConst.MAX_SUM).required(),
+	sum: Joi.number()
+		.integer()
+		.min(validTransactionConst.MIN_SUM)
+		.max(validTransactionConst.MAX_SUM)
+		.required(),
 	date: Joi.date().max("now"),
-	balance: Joi.number().integer().min(validTransactionConst.MIN_SUM).max(validTransactionConst.MAX_SUM).required(),
 })
 
 const schemaId = Joi.object({

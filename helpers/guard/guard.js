@@ -1,18 +1,26 @@
 const HttpCode = require("../constants/httpConstants")
 const { userControllers } = require("../../controllers")
 const { databaseApi } = require("../../repository")
-const { JWT_SECRET_KEY, JWT_REFRESH_SECRET_KEY } = require("../../config/dotenv-config")
+const {
+	JWT_SECRET_KEY,
+	JWT_REFRESH_SECRET_KEY,
+} = require("../../config/dotenv-config")
 const jwt = require("jsonwebtoken")
 
 const guard = async (req, res, next) => {
 	let AccessToken = getAccessToken(req)
 
 	if (!AccessToken) return sendError(res)
-	const isAccessToken = jwt.verify(AccessToken, JWT_SECRET_KEY, (err, decoded) => {
-		if (err) return null
 
-		return decoded
-	})
+	const isAccessToken = jwt.verify(
+		AccessToken,
+		JWT_SECRET_KEY,
+		(err, decoded) => {
+			if (err) return null
+
+			return decoded
+		},
+	)
 
 	if (isAccessToken) {
 		const user = await databaseApi.findUserById(isAccessToken.id)
@@ -24,11 +32,15 @@ const guard = async (req, res, next) => {
 
 	const RefreshToken = getRefreshToken(req)
 
-	const isRefreshToken = jwt.verify(RefreshToken, JWT_REFRESH_SECRET_KEY, (err, decoded) => {
-		if (err) return null
+	const isRefreshToken = jwt.verify(
+		RefreshToken,
+		JWT_REFRESH_SECRET_KEY,
+		(err, decoded) => {
+			if (err) return null
 
-		return decoded
-	})
+			return decoded
+		},
+	)
 
 	if (isRefreshToken) {
 		const user = await databaseApi.findUserById(isRefreshToken.id)
@@ -37,7 +49,9 @@ const guard = async (req, res, next) => {
 		if (user.loginToken !== AccessToken) return sendError(res)
 		req.user = await userControllers.refreshLoginToken(isRefreshToken.id)
 
-		res.cookie("refreshToken", req.user.refreshToken, { maxAge: Date.now() + 30 * 60 * 1000 })
+		res.cookie("refreshToken", req.user.refreshToken, {
+			maxAge: Date.now() + 30 * 60 * 1000,
+		})
 
 		return next()
 	}
