@@ -18,29 +18,29 @@ class DatabaseApi {
 		UserModel.findByIdAndUpdate(id, { loginToken, refreshToken }, { new: true })
 
 	updateTokenVerify = verifyToken =>
-		UserModel.findOneAndUpdate({ verifyToken }, { isVerified: true, verifyToken: null }, { new: true })
+		UserModel.findOneAndUpdate(
+			{ verifyToken },
+			{ isVerified: true, verifyToken: null },
+			{ new: true },
+		)
 
 	//* it is for second send for verify
-	refreshVerifyToken = (id, verifyToken) => UserModel.findByIdAndUpdate(id, { verifyToken }, { new: true })
+	refreshVerifyToken = (id, verifyToken) =>
+		UserModel.findByIdAndUpdate(id, { verifyToken }, { new: true })
 
 	//* update balance after transactions wait user
 
-	//* if positive
-	incrementBalance = async (id, newBalance) => {
+	//* if
+	updateBalance = async (id, changeBalance, type) => {
 		const { balance: oldBalance } = await this.findUserById(id)
-		return UserModel.findByIdAndUpdate(id, { balance: oldBalance + newBalance }, { new: true })
+		return UserModel.findByIdAndUpdate(
+			id,
+			{
+				balance: type ? oldBalance + changeBalance : oldBalance - changeBalance,
+			},
+			{ new: true },
+		)
 	}
-
-	//* if negative
-	decrementBalance = async (id, newBalance) => {
-		const { balance: oldBalance } = await this.findUserById(id)
-		return UserModel.findByIdAndUpdate(id, { balance: oldBalance - newBalance }, { new: true })
-	}
-
-	//! it can be another
-	//* if positive
-	// updateBalance = async (id, balance) => UserModel.findByIdAndUpdate(id,{balance},{new: true})
-
 	//todo
 	//*create transaction
 	createTransaction = async body => {
@@ -48,8 +48,8 @@ class DatabaseApi {
 		return result
 	}
 	//* get transaction
-	getAllTransaction = async userId => {
-		const results = await TransactionModel.find({ owner: userId })
+	getAllTransaction = async (searchOptions, query) => {
+		const results = await TransactionModel.paginate(searchOptions, query)
 		return results
 	}
 	//* get transaction byId
@@ -59,7 +59,10 @@ class DatabaseApi {
 	}
 	//* remove transaction
 	removeTransaction = async (id, userId) => {
-		const result = await TransactionModel.findOneAndRemove({ _id: id, owner: userId })
+		const result = await TransactionModel.findOneAndRemove({
+			_id: id,
+			owner: userId,
+		})
 		return result
 	}
 	//* update transaction
@@ -76,7 +79,8 @@ class DatabaseApi {
 	//* findRefresh token
 	findRefreshToken = id => TokenModel.findOne({ owner: id })
 	//* update refreshToken
-	updateRefreshToken = (id, refreshToken) => TokenModel.findByIdAndUpdate(id, { refreshToken })
+	updateRefreshToken = (id, refreshToken) =>
+		TokenModel.findByIdAndUpdate(id, { refreshToken })
 	//* delete refresh token
 	removeRefreshToken = id => TokenModel.findByIdAndRemove(id)
 }

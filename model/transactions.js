@@ -1,5 +1,7 @@
 const { Schema, model, SchemaTypes } = require("mongoose")
 
+const mongoosePaginate = require("mongoose-paginate-v2")
+
 const transactionSchema = new Schema(
 	{
 		type: { type: String, required: true },
@@ -22,6 +24,8 @@ const transactionSchema = new Schema(
 		toObject: { virtuals: true },
 	},
 )
+
+transactionSchema.plugin(mongoosePaginate)
 
 const TransactionModel = model("transaction", transactionSchema)
 
