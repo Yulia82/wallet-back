@@ -34,7 +34,11 @@ const getTransaction = async (req, res) => {
 			},
 		})
 	}
-	throw new CustomError(HttpCode.NOT_FOUND, "Transaction not found")
+	throw new CustomError(
+		HttpCode.NOT_FOUND,
+		"Transaction not found",
+		errorConstants.TRANSACTION_ID_ERROR,
+	)
 }
 
 const saveTransaction = async ({ user, body }, res) => {
@@ -74,7 +78,11 @@ const changeTransaction = async (req, res) => {
 			},
 		})
 	}
-	throw new CustomError(HttpCode.NOT_FOUND, "Transaction not found")
+	throw new CustomError(
+		HttpCode.NOT_FOUND,
+		"Transaction not found",
+		errorConstants.TRANSACTION_ID_ERROR,
+	)
 }
 
 const deleteTransaction = async (req, res) => {
@@ -93,7 +101,11 @@ const deleteTransaction = async (req, res) => {
 			},
 		})
 	}
-	throw new CustomError(HttpCode.NOT_FOUND, "Transaction not found")
+	throw new CustomError(
+		HttpCode.NOT_FOUND,
+		"Transaction not found",
+		errorConstants.TRANSACTION_ID_ERROR,
+	)
 }
 
 const getStatistic = async (req, res) => {

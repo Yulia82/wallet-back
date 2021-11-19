@@ -35,6 +35,12 @@ const wrapperError = fn => async (req, res, next) => {
 					message: e.message,
 				})
 				break
+			case errorConstants.TRANSACTION_ID_ERROR:
+				res.status(e.status).json({
+					status: "error",
+					code: e.status,
+					message: e.message,
+				})
 
 			default:
 				next(e)
