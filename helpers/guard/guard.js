@@ -44,9 +44,12 @@ const guard = async (req, res, next) => {
 
 	if (isRefreshToken) {
 		const user = await databaseApi.findUserById(isRefreshToken.id)
+
 		if (!user) return sendError(res)
 
-		if (user.loginToken !== AccessToken) return sendError(res)
+		if (user.loginToken !== AccessToken) {
+			return sendError(res)
+		}
 		req.user = await userControllers.refreshLoginToken(isRefreshToken.id)
 
 		res.cookie("refreshToken", req.user.refreshToken, {
@@ -55,6 +58,7 @@ const guard = async (req, res, next) => {
 
 		return next()
 	}
+
 	return sendError(res)
 }
 

@@ -30,30 +30,17 @@ class DatabaseApi {
 
 	//* update balance after transactions wait user
 
-	//* if positive
-	incrementBalance = async (id, newBalance) => {
+	//* if
+	updateBalance = async (id, changeBalance, type) => {
 		const { balance: oldBalance } = await this.findUserById(id)
 		return UserModel.findByIdAndUpdate(
 			id,
-			{ balance: oldBalance + newBalance },
+			{
+				balance: type ? oldBalance + changeBalance : oldBalance - changeBalance,
+			},
 			{ new: true },
 		)
 	}
-
-	//* if negative
-	decrementBalance = async (id, newBalance) => {
-		const { balance: oldBalance } = await this.findUserById(id)
-		return UserModel.findByIdAndUpdate(
-			id,
-			{ balance: oldBalance - newBalance },
-			{ new: true },
-		)
-	}
-
-	//! it can be another
-	//* if positive
-	// updateBalance = async (id, balance) => UserModel.findByIdAndUpdate(id,{balance},{new: true})
-
 	//todo
 	//*create transaction
 	createTransaction = async body => {

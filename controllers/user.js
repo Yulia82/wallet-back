@@ -108,11 +108,11 @@ const refreshLoginToken = async id => {
 	}
 
 	const loginToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, {
-		expiresIn: "1d",
+		expiresIn: "12h",
 	})
 
 	const refreshToken = jwt.sign(payload, ENV.JWT_REFRESH_SECRET_KEY, {
-		expiresIn: "30d",
+		expiresIn: "24h",
 	})
 	const result = await databaseApi.updateToken(id, loginToken, refreshToken)
 

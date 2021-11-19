@@ -39,7 +39,11 @@ const getTransaction = async (req, res) => {
 
 const saveTransaction = async ({ user, body }, res) => {
 	const { id: userId, loginToken } = user
-	const { balance } = await databaseApi.incrementBalance(userId, body.sum)
+	const { balance } = await databaseApi.updateBalance(
+		userId,
+		body.sum,
+		body.type,
+	)
 	const response = await databaseApi.createTransaction({
 		...body,
 		owner: userId,
