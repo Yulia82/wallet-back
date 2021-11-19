@@ -6,6 +6,7 @@ const ErrorTypes = {
 	WRONG_URL_VERIFY: "wrongVerifyUrl",
 	BAD_REQUEST: "badRequest",
 	NO_CONTENT: "noContent",
+	TRANSACTION_ID_ERROR: "transactionIdError",
 }
 
 module.exports = ErrorTypes

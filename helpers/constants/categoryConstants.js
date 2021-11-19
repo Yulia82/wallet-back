@@ -1,5 +1,18 @@
-const categoryDecrement = { regular: "Регулярный доход", irregular: "Нерегулярный доход" }
-const categoryIncrement = { any: "Разное", auto: "Машина", products: "Продукты" }
+const categoryDecrement = {
+	regular: "Регулярный доход",
+	irregular: "Нерегулярный доход",
+}
+const categoryIncrement = {
+	otherExpenses: "Другие расходы",
+	auto: "Машина",
+	products: "Продукты",
+	mainExpenses: "Основные расходы",
+	familyExpenses: "Забота о семье",
+	childrenExpenses: "Забота о детях",
+	householdProducts: "Товары для дома",
+	education: "Образование",
+	leisure: "Досуг",
+}
 
 const categoryKeys = {
 	categoryDecrement: Object.entries(categoryDecrement).flatMap(arr => ({
