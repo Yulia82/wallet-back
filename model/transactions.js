@@ -1,10 +1,11 @@
+const { boolean } = require("joi")
 const { Schema, model, SchemaTypes } = require("mongoose")
 
 const mongoosePaginate = require("mongoose-paginate-v2")
 
 const transactionSchema = new Schema(
 	{
-		type: { type: String, required: true },
+		type: { type: Boolean, required: true },
 		category: { type: String, required: true },
 		sum: { type: Number, required: true },
 		date: { type: String, required: false },
