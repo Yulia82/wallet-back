@@ -76,6 +76,10 @@ class DatabaseApi {
 		)
 		return result
 	}
+
+	//* get statistics
+	getStat = async (searchOptions, query) =>
+		await TransactionModel.find(searchOptions)
 	//* findRefresh token
 	findRefreshToken = id => TokenModel.findOne({ owner: id })
 	//* update refreshToken
