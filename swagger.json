@@ -1,9 +1,9 @@
 {
 	"openapi": "3.0.1",
 	"info": {
-		"version": "0.0.1",
+		"version": "2.0.0",
 		"title": "Wallet API",
-		"description": "Showing off swagger-ui-express",
+		"description": "REST API for work with Wallet web-application",
 		"license": {
 			"name": "MIT",
 			"url": "https://opensource.org/licenses/MIT"
@@ -19,7 +19,7 @@
 		},
 		{
 			"name": "Transactions",
-			"description": "Authorization endpoints"
+			"description": "Transaction endpoints"
 		}
 	],
 	"paths": {
@@ -41,7 +41,7 @@
 				},
 				"responses": {
 					"201": {
-						"description": "Successful operation",
+						"description": "User created",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -51,12 +51,13 @@
 						}
 					},
 					"400": {
-						"description": "Bad request (invalid request body)",
-						"content": {}
+						"description": "Bad request (invalid request body)"
 					},
 					"409": {
-						"description": "Provided email already exists",
-						"content": {}
+						"description": "Provided email already exists"
+					},
+					"500": {
+						"description": "Internal server error"
 					}
 				}
 			}
@@ -78,7 +79,7 @@
 					}
 				},
 				"responses": {
-					"201": {
+					"200": {
 						"description": "Successful operation",
 						"content": {
 							"application/json": {
@@ -89,12 +90,10 @@
 						}
 					},
 					"400": {
-						"description": "Bad request (invalid request body)",
-						"content": {}
+						"description": "Bad request (invalid request body)"
 					},
-					"409": {
-						"description": "Provided email already exists",
-						"content": {}
+					"500": {
+						"description": "Internal server error"
 					}
 				}
 			}
@@ -116,7 +115,7 @@
 					}
 				},
 				"responses": {
-					"201": {
+					"200": {
 						"description": "Successful operation",
 						"content": {
 							"application/json": {
@@ -127,12 +126,10 @@
 						}
 					},
 					"400": {
-						"description": "Bad request (invalid request body)",
-						"content": {}
+						"description": "Bad request (invalid request body)"
 					},
-					"409": {
-						"description": "Provided email already exists",
-						"content": {}
+					"500": {
+						"description": "Internal server error"
 					}
 				}
 			}
@@ -144,7 +141,7 @@
 				"parameters": [],
 				"security": [{ "Bearer": [] }],
 				"responses": {
-					"201": {
+					"200": {
 						"description": "Successful operation",
 						"content": {
 							"application/json": {
@@ -154,13 +151,11 @@
 							}
 						}
 					},
-					"400": {
-						"description": "Bad request (invalid request body)",
-						"content": {}
+					"401": {
+						"description": "Invalid access token"
 					},
-					"409": {
-						"description": "Provided email already exists",
-						"content": {}
+					"500": {
+						"description": "Internal server error"
 					}
 				}
 			}
@@ -172,7 +167,7 @@
 				"parameters": [],
 				"security": [{ "Bearer": [] }],
 				"responses": {
-					"201": {
+					"200": {
 						"description": "Successful operation",
 						"content": {
 							"application/json": {
@@ -182,13 +177,193 @@
 							}
 						}
 					},
-					"400": {
-						"description": "Bad request (invalid request body)",
-						"content": {}
+					"401": {
+						"description": "Invalid access token"
 					},
-					"409": {
-						"description": "Provided email already exists",
-						"content": {}
+					"500": {
+						"description": "Internal server error"
+					}
+				}
+			}
+		},
+		"/api/transaction": {
+			"get": {
+				"tags": ["Transactions"],
+				"summary": "Get Transactions",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CurrentUserResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid access token"
+					},
+					"404": {
+						"description": "Transactions not found"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
+				}
+			},
+			"post": {
+				"tags": ["Transactions"],
+				"summary": "Save Transaction",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"responses": {
+					"201": {
+						"description": "Transaction added",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CurrentUserResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Bad request (invalid request body)"
+					},
+					"401": {
+						"description": "Invalid access token"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
+				}
+			}
+		},
+		"/api/transaction/statistic": {
+			"get": {
+				"tags": ["Transactions"],
+				"summary": "Get Statistic",
+				"parameters": [],
+				"security": [{ "Bearer": [] }],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CurrentUserResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid access token"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
+				}
+			}
+		},
+		"/api/transaction/{transactionId}": {
+			"get": {
+				"tags": ["Transactions"],
+				"summary": "Get Transaction",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "transactionId",
+						"required": true,
+						"type": "string",
+						"description": "Transaction ID"
+					}
+				],
+				"security": [{ "Bearer": [] }],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CurrentUserResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid access token"
+					},
+					"404": {
+						"description": "Transactions not found"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
+				}
+			},
+			"put": {
+				"tags": ["Transactions"],
+				"summary": "Update Transaction",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "transactionId",
+						"required": true,
+						"type": "string",
+						"description": "Transaction ID"
+					}
+				],
+				"security": [{ "Bearer": [] }],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CurrentUserResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid access token"
+					},
+					"404": {
+						"description": "Transactions not found"
+					},
+					"500": {
+						"description": "Internal server error"
+					}
+				}
+			},
+			"delete": {
+				"tags": ["Transactions"],
+				"summary": "Remove Transaction",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "transactionId",
+						"required": true,
+						"type": "string",
+						"description": "Transaction ID"
+					}
+				],
+				"security": [{ "Bearer": [] }],
+				"responses": {
+					"204": {
+						"description": "Transaction removed"
+					},
+					"401": {
+						"description": "Invalid access token"
+					},
+					"404": {
+						"description": "Transactions not found"
+					},
+					"500": {
+						"description": "Internal server error"
 					}
 				}
 			}
