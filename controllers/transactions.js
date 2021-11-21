@@ -80,7 +80,7 @@ const saveTransaction = async ({ user, body }, res) => {
 
 const changeTransaction = async (req, res) => {
 	const { id: userId, loginToken } = req.user
-	const transaction = databaseApi.updateTransaction(
+	const transaction = await databaseApi.updateTransaction(
 		req.params.transactionId,
 		req.body,
 		userId,
