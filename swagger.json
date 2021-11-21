@@ -1,7 +1,7 @@
 {
 	"openapi": "3.0.1",
 	"info": {
-		"version": "2.0.0",
+		"version": "2.1.1",
 		"title": "Wallet API",
 		"description": "REST API for work with Wallet web-application",
 		"license": {
@@ -267,7 +267,22 @@
 			"get": {
 				"tags": ["Transactions"],
 				"summary": "Get Transactions",
-				"parameters": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"type": "number",
+						"description": "Limit"
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"required": false,
+						"type": "number",
+						"description": "Offset"
+					}
+				],
 				"security": [{ "Bearer": [] }],
 				"responses": {
 					"200": {
@@ -376,7 +391,22 @@
 			"get": {
 				"tags": ["Transactions"],
 				"summary": "Get Statistic",
-				"parameters": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "month",
+						"required": false,
+						"type": "number",
+						"description": "Month"
+					},
+					{
+						"in": "query",
+						"name": "year",
+						"required": false,
+						"type": "number",
+						"description": "Year"
+					}
+				],
 				"security": [{ "Bearer": [] }],
 				"responses": {
 					"200": {
