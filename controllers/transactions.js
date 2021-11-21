@@ -108,7 +108,8 @@ const deleteTransaction = async (req, res) => {
 		req.params.transactionId,
 		userId,
 	)
-	if (transaction) {
+
+	if (response) {
 		return res.status(HttpCode.OK).json({
 			status: "success",
 			code: HttpCode.OK,
