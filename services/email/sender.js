@@ -7,7 +7,7 @@ const nodeMailer = require("nodemailer")
 class CreateSenderSendGrid {
 	async send(msg) {
 		sgMail.setApiKey(SEND_GRID_KEY)
-		return await sgMail.send({ ...msg, from: NODEMAILER_EMAIL })
+		return await sgMail.send({ ...msg, from: SEND_GRID_EMAIL })
 	}
 }
 
