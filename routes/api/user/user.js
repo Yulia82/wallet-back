@@ -6,6 +6,7 @@ const {
 const express = require("express")
 const router = express.Router()
 const { userControllers } = require("../../../controllers")
+
 const { guard, guardRefresh } = require("../../../helpers/guard")
 // const loginLimit = require("../../helpers/rateLimitLogin")
 const { databaseApi } = require("../../../repository")
@@ -22,6 +23,7 @@ router.get(
 		})
 	}),
 )
+
 router.post(
 	"/verify",
 	validateEmailBeforeVerify,

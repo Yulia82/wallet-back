@@ -80,7 +80,7 @@ const saveTransaction = async ({ user, body }, res) => {
 
 const changeTransaction = async (req, res) => {
 	const { id: userId, loginToken } = req.user
-	const transaction = databaseApi.updateTransaction(
+	const transaction = await databaseApi.updateTransaction(
 		req.params.transactionId,
 		req.body,
 		userId,
@@ -108,7 +108,8 @@ const deleteTransaction = async (req, res) => {
 		req.params.transactionId,
 		userId,
 	)
-	if (transaction) {
+
+	if (response) {
 		return res.status(HttpCode.OK).json({
 			status: "success",
 			code: HttpCode.OK,

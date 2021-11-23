@@ -1,9 +1,9 @@
 {
 	"openapi": "3.0.1",
 	"info": {
-		"version": "0.0.1",
+		"version": "2.1.1",
 		"title": "Wallet API",
-		"description": "Showing off swagger-ui-express",
+		"description": "REST API for work with Wallet web-application",
 		"license": {
 			"name": "MIT",
 			"url": "https://opensource.org/licenses/MIT"
@@ -19,7 +19,7 @@
 		},
 		{
 			"name": "Transactions",
-			"description": "Authorization endpoints"
+			"description": "Transaction endpoints"
 		}
 	],
 	"paths": {
@@ -41,7 +41,7 @@
 				},
 				"responses": {
 					"201": {
-						"description": "Successful operation",
+						"description": "User created",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -52,11 +52,33 @@
 					},
 					"400": {
 						"description": "Bad request (invalid request body)",
-						"content": {}
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
 					},
 					"409": {
 						"description": "Provided email already exists",
-						"content": {}
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -78,7 +100,7 @@
 					}
 				},
 				"responses": {
-					"201": {
+					"200": {
 						"description": "Successful operation",
 						"content": {
 							"application/json": {
@@ -90,11 +112,23 @@
 					},
 					"400": {
 						"description": "Bad request (invalid request body)",
-						"content": {}
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
 					},
-					"409": {
-						"description": "Provided email already exists",
-						"content": {}
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -116,7 +150,7 @@
 					}
 				},
 				"responses": {
-					"201": {
+					"200": {
 						"description": "Successful operation",
 						"content": {
 							"application/json": {
@@ -128,11 +162,23 @@
 					},
 					"400": {
 						"description": "Bad request (invalid request body)",
-						"content": {}
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
 					},
-					"409": {
-						"description": "Provided email already exists",
-						"content": {}
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -144,7 +190,7 @@
 				"parameters": [],
 				"security": [{ "Bearer": [] }],
 				"responses": {
-					"201": {
+					"204": {
 						"description": "Successful operation",
 						"content": {
 							"application/json": {
@@ -154,13 +200,25 @@
 							}
 						}
 					},
-					"400": {
-						"description": "Bad request (invalid request body)",
-						"content": {}
+					"401": {
+						"description": "Invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
 					},
-					"409": {
-						"description": "Provided email already exists",
-						"content": {}
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -172,7 +230,7 @@
 				"parameters": [],
 				"security": [{ "Bearer": [] }],
 				"responses": {
-					"201": {
+					"200": {
 						"description": "Successful operation",
 						"content": {
 							"application/json": {
@@ -182,13 +240,378 @@
 							}
 						}
 					},
+					"401": {
+						"description": "Invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/transaction": {
+			"get": {
+				"tags": ["Transactions"],
+				"summary": "Get Transactions",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"type": "number",
+						"description": "Limit"
+					},
+					{
+						"in": "query",
+						"name": "offset",
+						"required": false,
+						"type": "number",
+						"description": "Offset"
+					}
+				],
+				"security": [{ "Bearer": [] }],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetAllTransactionsResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Transactions not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": ["Transactions"],
+				"summary": "Add Transaction",
+				"parameters": [],
+				"requestBody": {
+					"description": "Transaction body",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AddTransactionRequest"
+							}
+						}
+					}
+				},
+				"security": [{ "Bearer": [] }],
+				"responses": {
+					"201": {
+						"description": "Transaction added",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AddTransactionResponse"
+								}
+							}
+						}
+					},
 					"400": {
 						"description": "Bad request (invalid request body)",
-						"content": {}
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
 					},
-					"409": {
-						"description": "Provided email already exists",
-						"content": {}
+					"401": {
+						"description": "Invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/transaction/statistic": {
+			"get": {
+				"tags": ["Transactions"],
+				"summary": "Get Statistic",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "month",
+						"required": false,
+						"type": "number",
+						"description": "Month"
+					},
+					{
+						"in": "query",
+						"name": "year",
+						"required": false,
+						"type": "number",
+						"description": "Year"
+					}
+				],
+				"security": [{ "Bearer": [] }],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetStatisticResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/transaction/{transactionId}": {
+			"get": {
+				"tags": ["Transactions"],
+				"summary": "Get Transaction",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "transactionId",
+						"required": true,
+						"type": "string",
+						"description": "Transaction ID"
+					}
+				],
+				"security": [{ "Bearer": [] }],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetTransactionByIdResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Transactions not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": ["Transactions"],
+				"summary": "Update Transaction",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "transactionId",
+						"required": true,
+						"type": "string",
+						"description": "Transaction ID"
+					}
+				],
+				"requestBody": {
+					"description": "Transaction body",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateTransactionRequest"
+							}
+						}
+					}
+				},
+				"security": [{ "Bearer": [] }],
+				"responses": {
+					"200": {
+						"description": "Successful operation",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UpdateTransactionResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Transactions not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": ["Transactions"],
+				"summary": "Remove Transaction",
+				"parameters": [
+					{
+						"in": "path",
+						"name": "transactionId",
+						"required": true,
+						"type": "string",
+						"description": "Transaction ID"
+					}
+				],
+				"security": [{ "Bearer": [] }],
+				"responses": {
+					"204": {
+						"description": "Transaction removed"
+					},
+					"401": {
+						"description": "Invalid access token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Transactions not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -198,7 +621,7 @@
 		"schemas": {
 			"RegistrationRequest": {
 				"type": "object",
-				"required": ["email", "password"],
+				"required": ["email", "password", "name"],
 				"properties": {
 					"email": {
 						"type": "string",
@@ -218,29 +641,26 @@
 				}
 			},
 			"RegistrationResponse": {
-				"type": "array",
-				"items": {
-					"type": "object",
-					"properties": {
-						"email": {
-							"type": "string",
-							"description": "User's email",
-							"format": "email"
-						},
-						"message": {
-							"type": "string",
-							"descriptions": "Check your email and complete registration"
-						},
-						"successEmail": {
-							"type": "boolean",
-							"description": "is email verify send",
-							"example": true
-						},
-						"name": {
-							"type": "string",
-							"description": "User's name",
-							"example": "Erika"
-						}
+				"type": "object",
+				"properties": {
+					"email": {
+						"type": "string",
+						"description": "User's email",
+						"format": "email"
+					},
+					"message": {
+						"type": "string",
+						"descriptions": "Check your email and complete registration"
+					},
+					"successEmail": {
+						"type": "boolean",
+						"description": "is email verify send",
+						"example": true
+					},
+					"name": {
+						"type": "string",
+						"description": "User's name",
+						"example": "Erika"
 					}
 				},
 				"example": [
@@ -252,7 +672,6 @@
 					}
 				]
 			},
-
 			"RefreshVerifyRequest": {
 				"type": "object",
 				"required": ["email"],
@@ -265,29 +684,26 @@
 				}
 			},
 			"RefreshVerifyResponse": {
-				"type": "array",
-				"items": {
-					"type": "object",
-					"properties": {
-						"email": {
-							"type": "string",
-							"description": "User's email",
-							"format": "email"
-						},
-						"message": {
-							"type": "string",
-							"descriptions": "Check your email and complete registration"
-						},
-						"successEmail": {
-							"type": "boolean",
-							"description": "is email verify send",
-							"example": true
-						},
-						"name": {
-							"type": "string",
-							"description": "User's name",
-							"example": "Erika"
-						}
+				"type": "object",
+				"properties": {
+					"email": {
+						"type": "string",
+						"description": "User's email",
+						"format": "email"
+					},
+					"message": {
+						"type": "string",
+						"descriptions": "Check your email and complete registration"
+					},
+					"successEmail": {
+						"type": "boolean",
+						"description": "is email verify send",
+						"example": true
+					},
+					"name": {
+						"type": "string",
+						"description": "User's name",
+						"example": "Erika"
 					}
 				},
 				"example": [
@@ -316,65 +732,615 @@
 				}
 			},
 			"LoginResponse": {
-				"type": "array",
-				"items": {
-					"type": "object",
-					"properties": {
-						"balance": {
-							"type": "number",
-							"description": "User's balance",
-							"example": 456
-						},
-						"token": {
-							"type": "string",
-							"description": "User's token",
-							"format": "jwt"
-						},
-						"refreshToken": {
-							"type": "string",
-							"description": "User's refresh token",
-							"format": "jwt"
-						},
-						"name": {
-							"type": "string",
-							"description": "User's name",
-							"example": "Erika"
+				"type": "object",
+				"properties": {
+					"balance": {
+						"type": "number",
+						"description": "User's balance",
+						"example": 456
+					},
+					"token": {
+						"type": "string",
+						"description": "User's token",
+						"format": "jwt"
+					},
+					"refreshToken": {
+						"type": "string",
+						"description": "User's refresh token",
+						"format": "jwt"
+					},
+					"name": {
+						"type": "string",
+						"description": "User's name",
+						"example": "Erika"
+					}
+				},
+				"example": {
+					"token": "token short",
+					"refreshToken": "token long",
+					"name": "Erika"
+				}
+			},
+			"LogoutResponse": {},
+			"CurrentUserResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "string",
+						"description": "Response status"
+					},
+					"code": {
+						"type": "number",
+						"description": "code status"
+					},
+					"loginToken": {
+						"type": "string",
+						"description": "User's token",
+						"format": "jwt"
+					},
+					"response": {
+						"type": "object",
+						"properties": {
+							"email": {
+								"type": "string",
+								"description": "User's email",
+								"format": "email"
+							},
+							"name": {
+								"type": "string",
+								"description": "User's name",
+								"example": "Erika"
+							},
+							"balance": {
+								"type": "number",
+								"description": "User's balance",
+								"example": 456
+							}
+						}
+					}
+				}
+			},
+			"AddTransactionRequest": {
+				"type": "object",
+				"required": ["type", "category", "sum", "date"],
+				"properties": {
+					"type": {
+						"type": "boolean",
+						"description": "Type of transaction"
+					},
+					"category": {
+						"type": "string",
+						"description": "Category name"
+					},
+					"sum": {
+						"type": "number",
+						"description": "Transaction amount"
+					},
+					"date": {
+						"type": "string",
+						"description": "Date of transaction dd:mm:yyyy"
+					}
+				},
+				"example": {
+					"type": true,
+					"category": "otherExpenses",
+					"sum": 6000,
+					"date": "21112021"
+				}
+			},
+			"AddTransactionResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "string",
+						"description": "Response status"
+					},
+					"code": {
+						"type": "number",
+						"description": "code status"
+					},
+					"loginToken": {
+						"type": "string",
+						"description": "User's token",
+						"format": "jwt"
+					},
+					"response": {
+						"type": "object",
+						"properties": {
+							"type": {
+								"type": "boolean",
+								"description": "Type of transaction"
+							},
+							"category": {
+								"type": "string",
+								"description": "Category name"
+							},
+							"sum": {
+								"type": "number",
+								"description": "Transaction amount"
+							},
+							"date": {
+								"type": "string",
+								"description": "Date of transaction"
+							},
+							"balance": {
+								"type": "number",
+								"description": "Balance after transaction"
+							},
+							"owner": {
+								"type": "string",
+								"description": "Owner of transaction"
+							},
+							"createdAt": {
+								"type": "string",
+								"description": "Time of transaction creation on the server"
+							},
+							"updatedAt": {
+								"type": "string",
+								"description": "Time to update the transaction on the server"
+							},
+							"id": {
+								"type": "string",
+								"description": "Transaction ID"
+							}
 						}
 					}
 				},
-				"example": [
-					{
-						"token": "token short",
-						"refreshToken": "token long",
-						"name": "Erika"
+				"example": {
+					"status": "success",
+					"code": 201,
+					"loginToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOWE2MmQwZTRhZDYwZWMyNzhlM2JkNiIsImlhdCI6MTYzNzUwNzgyNSwiZXhwIjoxNjM3NTUxMDI1fQ.Wg1x3uD1d77GjiPoUYouEf-V90-WbPCN5kXBEIrIjvw",
+					"response": {
+						"type": false,
+						"category": "products",
+						"sum": 3000,
+						"date": "1970-01-01",
+						"balance": 3000,
+						"owner": "619a62d0e4ad60ec278e3bd6",
+						"createdAt": "2021-11-21T15:17:33.646Z",
+						"updatedAt": "2021-11-21T15:17:33.646Z",
+						"id": "619a630de4ad60ec278e3bee"
 					}
-				]
+				}
 			},
-			"LogoutResponse": {
-				"type": "array",
-				"items": {}
-			},
-			"CurrentUserResponse": {
-				"type": "array",
-				"items": {
-					"type": "object",
-					"properties": {
-						"email": {
-							"type": "string",
-							"description": "User's email",
-							"format": "email"
-						},
-						"name": {
-							"type": "string",
-							"description": "User's name",
-							"example": "Erika"
-						},
-						"balance": {
-							"type": "number",
-							"description": "User's balance",
-							"example": 456
+			"GetAllTransactionsResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "string",
+						"description": "Response status"
+					},
+					"code": {
+						"type": "number",
+						"description": "code status"
+					},
+					"loginToken": {
+						"type": "string",
+						"description": "User's token",
+						"format": "jwt"
+					},
+					"response": {
+						"type": "object",
+						"properties": {
+							"docs": {
+								"type": "array",
+								"items": {
+									"type": "object",
+									"properties": {
+										"type": {
+											"type": "boolean",
+											"description": "Type of transaction"
+										},
+										"category": {
+											"type": "string",
+											"description": "Category name"
+										},
+										"sum": {
+											"type": "number",
+											"description": "Transaction amount"
+										},
+										"date": {
+											"type": "string",
+											"description": "Date of transaction"
+										},
+										"balance": {
+											"type": "number",
+											"description": "Balance after transaction"
+										},
+										"owner": {
+											"type": "string",
+											"description": "Owner of transaction"
+										},
+										"createdAt": {
+											"type": "string",
+											"description": "Time of transaction creation on the server"
+										},
+										"updatedAt": {
+											"type": "string",
+											"description": "Time to update the transaction on the server"
+										},
+										"id": {
+											"type": "string",
+											"description": "Transaction ID"
+										}
+									}
+								}
+							},
+							"totalDocs": {
+								"type": "number",
+								"description": "Docs quantity"
+							},
+							"offset": {
+								"type": "number",
+								"description": "Docs offset"
+							},
+							"limit": {
+								"type": "number",
+								"description": "Docs limit"
+							},
+							"totalPages": {
+								"type": "number",
+								"description": "Pages quantity"
+							},
+							"page": {
+								"type": "number",
+								"description": "Page Number"
+							},
+							"pagingCounter": {
+								"type": "number",
+								"description": "Paging counter"
+							},
+							"hasPrevPage": {
+								"type": "boolean",
+								"description": "The presence of the previous page"
+							},
+							"hasNextPage": {
+								"type": "boolean",
+								"description": "The presence of the next page"
+							},
+							"prevPage": {
+								"type": "number",
+								"description": "Previous page number"
+							},
+							"nextPage": {
+								"type": "number",
+								"description": "Next page number"
+							}
 						}
 					}
+				},
+				"example": {
+					"status": "success",
+					"code": 200,
+					"loginToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOWE1Mjg5ZTRhZDYwZWMyNzhlM2FlMiIsImlhdCI6MTYzNzUwMzY5MSwiZXhwIjoxNjM3NTQ2ODkxfQ.VV-xNz_8DTTpxf9wBSQbR3vPU4BhS3RJMQankLKiHeg",
+					"response": {
+						"docs": [
+							{
+								"type": true,
+								"category": "auto",
+								"sum": 2000,
+								"date": "1970-01-01",
+								"balance": 20002000,
+								"owner": "619a5289e4ad60ec278e3ae2",
+								"createdAt": "2021-11-21T14:21:23.321Z",
+								"updatedAt": "2021-11-21T14:21:23.321Z",
+								"id": "619a55e3e4ad60ec278e3b29"
+							},
+							{
+								"type": true,
+								"category": "products",
+								"sum": 2000,
+								"date": "1970-01-01",
+								"balance": 200020002000,
+								"owner": "619a5289e4ad60ec278e3ae2",
+								"createdAt": "2021-11-21T14:21:39.910Z",
+								"updatedAt": "2021-11-21T14:21:39.910Z",
+								"id": "619a55f3e4ad60ec278e3b2e"
+							}
+						],
+						"totalDocs": 2,
+						"offset": 0,
+						"limit": 5,
+						"totalPages": 5,
+						"page": 1,
+						"pagingCounter": 1,
+						"hasPrevPage": false,
+						"hasNextPage": true,
+						"prevPage": null,
+						"nextPage": 2
+					}
+				}
+			},
+			"GetStatisticResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "string",
+						"description": "Response status"
+					},
+					"code": {
+						"type": "number",
+						"description": "code status"
+					},
+					"loginToken": {
+						"type": "string",
+						"description": "User's token",
+						"format": "jwt"
+					},
+					"response": {
+						"type": "array",
+						"items": {
+							"type": "object",
+							"properties": {
+								"summary": {
+									"type": "number",
+									"description": "Sum by category "
+								},
+								"type": {
+									"type": "string",
+									"description": "Category name"
+								}
+							}
+						}
+					}
+				},
+				"example": {
+					"status": "success",
+					"code": 200,
+					"loginToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOWE2MmQwZTRhZDYwZWMyNzhlM2JkNiIsImlhdCI6MTYzNzUxMjMxMSwiZXhwIjoxNjM3NTU1NTExfQ.8O8rUbxz_SfvmWhnyByHNu10DnQiTtE45ounQKryyaY",
+					"response": [
+						{
+							"summary": 5000,
+							"type": "otherExpenses"
+						},
+						{
+							"summary": 100,
+							"type": "auto"
+						},
+						{
+							"summary": 3000,
+							"type": "products"
+						},
+						{
+							"summary": 0,
+							"type": "mainExpenses"
+						},
+						{
+							"summary": 4000,
+							"type": "familyExpenses"
+						},
+						{
+							"summary": 0,
+							"type": "childrenExpenses"
+						},
+						{
+							"summary": 500,
+							"type": "householdProducts"
+						},
+						{
+							"summary": 10000,
+							"type": "education"
+						},
+						{
+							"summary": 100,
+							"type": "leisure"
+						}
+					]
+				}
+			},
+			"GetTransactionByIdResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "string",
+						"description": "Response status"
+					},
+					"code": {
+						"type": "number",
+						"description": "code status"
+					},
+					"loginToken": {
+						"type": "string",
+						"description": "User's token",
+						"format": "jwt"
+					},
+					"response": {
+						"type": "object",
+						"properties": {
+							"transaction": {
+								"type": "object",
+								"properties": {
+									"type": {
+										"type": "boolean",
+										"description": "Type of transaction"
+									},
+									"category": {
+										"type": "string",
+										"description": "Category name"
+									},
+									"sum": {
+										"type": "number",
+										"description": "Transaction amount"
+									},
+									"date": {
+										"type": "string",
+										"description": "Date of transaction"
+									},
+									"balance": {
+										"type": "number",
+										"description": "Balance after transaction"
+									},
+									"owner": {
+										"type": "string",
+										"description": "Owner of transaction"
+									},
+									"createdAt": {
+										"type": "string",
+										"description": "Time of transaction creation on the server"
+									},
+									"updatedAt": {
+										"type": "string",
+										"description": "Time to update the transaction on the server"
+									},
+									"id": {
+										"type": "string",
+										"description": "Transaction ID"
+									}
+								}
+							}
+						}
+					}
+				},
+				"example": {
+					"status": "success",
+					"code": 200,
+					"loginToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOWE2MmQwZTRhZDYwZWMyNzhlM2JkNiIsImlhdCI6MTYzNzUxMjMxMSwiZXhwIjoxNjM3NTU1NTExfQ.8O8rUbxz_SfvmWhnyByHNu10DnQiTtE45ounQKryyaY",
+					"response": {
+						"transaction": {
+							"type": false,
+							"category": "products",
+							"sum": 3000,
+							"date": "1970-01-01",
+							"balance": 3000,
+							"owner": "619a62d0e4ad60ec278e3bd6",
+							"createdAt": "2021-11-21T15:17:33.646Z",
+							"updatedAt": "2021-11-21T15:17:33.646Z",
+							"id": "619a630de4ad60ec278e3bee"
+						}
+					}
+				}
+			},
+			"UpdateTransactionRequest": {
+				"type": "object",
+				"required": ["type", "category", "sum", "date"],
+				"properties": {
+					"type": {
+						"type": "boolean",
+						"description": "Type of transaction"
+					},
+					"category": {
+						"type": "string",
+						"description": "Category name"
+					},
+					"sum": {
+						"type": "number",
+						"description": "Transaction amount"
+					},
+					"date": {
+						"type": "string",
+						"description": "Date of transaction dd:mm:yyyy"
+					}
+				},
+				"example": {
+					"type": false,
+					"category": "education",
+					"sum": 3000,
+					"date": "21112021"
+				}
+			},
+			"UpdateTransactionResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "string",
+						"description": "Response status"
+					},
+					"code": {
+						"type": "number",
+						"description": "code status"
+					},
+					"loginToken": {
+						"type": "string",
+						"description": "User's token",
+						"format": "jwt"
+					},
+					"response": {
+						"type": "object",
+						"properties": {
+							"transaction": {
+								"type": "object",
+								"properties": {
+									"type": {
+										"type": "boolean",
+										"description": "Type of transaction"
+									},
+									"category": {
+										"type": "string",
+										"description": "Category name"
+									},
+									"sum": {
+										"type": "number",
+										"description": "Transaction amount"
+									},
+									"date": {
+										"type": "string",
+										"description": "Date of transaction"
+									},
+									"balance": {
+										"type": "number",
+										"description": "Balance after transaction"
+									},
+									"owner": {
+										"type": "string",
+										"description": "Owner of transaction"
+									},
+									"createdAt": {
+										"type": "string",
+										"description": "Time of transaction creation on the server"
+									},
+									"updatedAt": {
+										"type": "string",
+										"description": "Time to update the transaction on the server"
+									},
+									"id": {
+										"type": "string",
+										"description": "Transaction ID"
+									}
+								}
+							}
+						}
+					}
+				},
+				"example": {
+					"status": "success",
+					"code": 200,
+					"loginToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOWE2MmQwZTRhZDYwZWMyNzhlM2JkNiIsImlhdCI6MTYzNzUxMjMxMSwiZXhwIjoxNjM3NTU1NTExfQ.8O8rUbxz_SfvmWhnyByHNu10DnQiTtE45ounQKryyaY",
+					"response": {
+						"transaction": {
+							"type": false,
+							"category": "otherExpenses",
+							"sum": 4000,
+							"date": "1970-01-01",
+							"balance": 10000,
+							"owner": "619a62d0e4ad60ec278e3bd6",
+							"createdAt": "2021-11-21T15:17:33.646Z",
+							"updatedAt": "2021-11-21T15:17:33.646Z",
+							"id": "619a630de4ad60ec278e3bee"
+						}
+					}
+				}
+			},
+			"ErrorResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "string",
+						"description": "Error status"
+					},
+					"code": {
+						"type": "number",
+						"description": "Error code"
+					},
+					"message": {
+						"type": "string",
+						"description": "Error message"
+					}
+				},
+
+				"example": {
+					"status": "error",
+					"code": 500,
+					"message": "Sorry we have some problems"
 				}
 			}
 		},

@@ -16,7 +16,8 @@ const schemaTransaction = Joi.object({
 		.min(validTransactionConst.MIN_SUM)
 		.max(validTransactionConst.MAX_SUM)
 		.required(),
-	date: Joi.date().max("now"),
+	date: Joi.date().timestamp("unix").required(),
+	comments: Joi.string().max(validTransactionConst.MAX_COMMENTS_LENGTH).trim(),
 })
 
 const schemaId = Joi.object({
