@@ -1,5 +1,10 @@
 const sgMail = require("@sendgrid/mail")
-const { SEND_GRID_KEY, NODEMAILER_EMAIL, NODEMAILER_PASSWORD, SEND_GRID_EMAIL } = require("../../config/dotenv-config")
+const {
+	SEND_GRID_KEY,
+	NODEMAILER_EMAIL,
+	NODEMAILER_PASSWORD,
+	SEND_GRID_EMAIL,
+} = require("../../config/dotenv-config")
 
 const nodeMailer = require("nodemailer")
 
@@ -7,7 +12,7 @@ const nodeMailer = require("nodemailer")
 class CreateSenderSendGrid {
 	async send(msg) {
 		sgMail.setApiKey(SEND_GRID_KEY)
-		return await sgMail.send({ ...msg, from: NODEMAILER_EMAIL })
+		return await sgMail.send({ ...msg, from: SEND_GRID_EMAIL })
 	}
 }
 

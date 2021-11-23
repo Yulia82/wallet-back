@@ -6,10 +6,12 @@ const {
 	JWT_REFRESH_SECRET_KEY,
 } = require("../../config/dotenv-config")
 const jwt = require("jsonwebtoken")
+const { sendError, getAccessToken } = require("./guardHelpers")
 
 const guard = async (req, res, next) => {
+	console.log("Cookies: ", req.headers.cookie)
 	let AccessToken = getAccessToken(req)
-
+	console.log("AccessToken", AccessToken)
 	if (!AccessToken) return sendError(res)
 
 	const isAccessToken = jwt.verify(
@@ -17,7 +19,6 @@ const guard = async (req, res, next) => {
 		JWT_SECRET_KEY,
 		(err, decoded) => {
 			if (err) return null
-
 			return decoded
 		},
 	)
@@ -29,53 +30,15 @@ const guard = async (req, res, next) => {
 
 		return next()
 	}
-
-	const RefreshToken = getRefreshToken(req)
-
-	const isRefreshToken = jwt.verify(
-		RefreshToken,
-		JWT_REFRESH_SECRET_KEY,
-		(err, decoded) => {
-			if (err) return null
-
-			return decoded
-		},
-	)
-
-	if (isRefreshToken) {
-		const user = await databaseApi.findUserById(isRefreshToken.id)
-
-		if (!user) return sendError(res)
-
-		if (user.loginToken !== AccessToken) {
-			return sendError(res)
-		}
-		req.user = await userControllers.refreshLoginToken(isRefreshToken.id)
-
-		res.cookie("refreshToken", req.user.refreshToken, {
-			maxAge: Date.now() + 30 * 60 * 1000,
-		})
-
-		return next()
-	}
-
-	return sendError(res)
+	return sendErrorBedAccess(res)
 }
 
-function sendError(res) {
-	return res.status(HttpCode.UNAUTHORIZED).json({
+function sendErrorBedAccess(res) {
+	return res.status(423).json({
 		status: "error",
-		code: HttpCode.UNAUTHORIZED,
+		code: 423,
 		message: "Invalid Authorization",
 	})
-}
-
-function getAccessToken(req) {
-	return req.get("Authorization")?.split(" ")[1]
-}
-
-function getRefreshToken(req) {
-	return req.get("Cookie").split("=")[1]
 }
 
 module.exports = guard

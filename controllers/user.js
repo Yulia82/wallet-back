@@ -1,7 +1,6 @@
 const crypto = require("crypto")
 const { databaseApi } = require("../repository")
 const { CustomError } = require("../helpers/errorHandler")
-const jwt = require("jsonwebtoken")
 
 const ENV = require("../config/dotenv-config")
 const {
@@ -23,6 +22,7 @@ const {
 	CreateSenderNodemailer,
 	CreateSenderSendGrid,
 } = require("../services/email")
+const TokenService = require("../services/tokenService/tokens")
 
 const registration = async (req, res, next) => {
 	const { name, email, password } = req.body
@@ -76,47 +76,50 @@ const login = async (req, res, next) => {
 	}
 
 	const id = user._id
-	const payload = {
-		id,
-	}
 
-	const loginToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, {
-		expiresIn: "12h",
-	})
+	const tokenService = new TokenService(user)
+	const { loginToken, refreshToken } = tokenService.createTokens()
 
-	const refreshToken = jwt.sign(payload, ENV.JWT_REFRESH_SECRET_KEY, {
-		expiresIn: "24h",
-	})
 	await databaseApi.updateToken(id, loginToken, refreshToken)
 
 	return res
 		.cookie("refreshToken", refreshToken, {
-			maxAge: Date.now() + 30 * 60 * 1000,
+			maxAge: 30 * 60 * 1000,
+			path: "/",
+			secure: false,
+			httpOnly: true,
+			// domain: "http://localhost:3000",
+			// signed: false,
 		})
 		.status(OK)
 		.json({
 			status: "success",
 			code: OK,
 			loginToken,
-			response: categoriesConstants.categoryKeys,
+			response: {
+				user,
+				categories: categoriesConstants.categoryKeys,
+			},
 		})
 }
 
-const refreshLoginToken = async id => {
-	const payload = {
-		id,
-	}
+const refreshLoginToken = async ({ user }, res) => {
+	const { id } = user
 
-	const loginToken = jwt.sign(payload, ENV.JWT_SECRET_KEY, {
-		expiresIn: "10m",
-	})
+	const tokenService = new TokenService(user)
+	const { loginToken, refreshToken } = tokenService.createTokens()
 
-	const refreshToken = jwt.sign(payload, ENV.JWT_REFRESH_SECRET_KEY, {
-		expiresIn: "30m",
-	})
-	const result = await databaseApi.updateToken(id, loginToken, refreshToken)
+	await databaseApi.updateToken(id, loginToken, refreshToken)
 
-	return result
+	return res
+		.cookie("refreshToken", refreshToken, {
+			maxAge: 30 * 60 * 1000,
+			path: "/",
+			secure: false,
+			httpOnly: true,
+		})
+		.status(OK)
+		.json({ status: "success", code: OK, loginToken })
 }
 
 const logout = async (req, res, next) => {

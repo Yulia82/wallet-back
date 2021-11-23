@@ -5,8 +5,11 @@ const helmet = require("helmet")
 
 const swaggerUi = require("swagger-ui-express")
 const swaggerDocument = require("./swagger.json")
+const cookieParser = require("cookie-parser")
 
 const { userRouter, transactionsRouter } = require("./routes")
+const { functions } = require("lodash")
+const nodemon = require("nodemon")
 
 const app = express()
 
@@ -14,8 +17,11 @@ const formatsLogger = app.get("env") === "development" ? "dev" : "short"
 
 app.use(helmet())
 app.use(logger(formatsLogger))
-app.use(cors())
+app.use(cookieParser())
+
 app.use(express.json({ limit: 10000 }))
+app.use(cors({ credentials: true, origin: "http://localhost:3000" }))
+
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use("/api/user", userRouter)
 app.use("/api/transaction", transactionsRouter)
