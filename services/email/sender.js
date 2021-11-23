@@ -1,5 +1,10 @@
 const sgMail = require("@sendgrid/mail")
-const { SEND_GRID_KEY, NODEMAILER_EMAIL, NODEMAILER_PASSWORD, SEND_GRID_EMAIL } = require("../../config/dotenv-config")
+const {
+	SEND_GRID_KEY,
+	NODEMAILER_EMAIL,
+	NODEMAILER_PASSWORD,
+	SEND_GRID_EMAIL,
+} = require("../../config/dotenv-config")
 
 const nodeMailer = require("nodemailer")
 
