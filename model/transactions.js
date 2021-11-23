@@ -8,7 +8,7 @@ const transactionSchema = new Schema(
 		type: { type: Boolean, required: true },
 		category: { type: String, required: true },
 		sum: { type: Number, required: true },
-		date: { type: String, required: false },
+		date: { type: String, required: true },
 		balance: { type: Number },
 		comments: { type: String, default: "" },
 		owner: { type: SchemaTypes.ObjectId, ref: "user" }, //! Связь транзакций с юзером.
