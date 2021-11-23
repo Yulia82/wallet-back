@@ -8,7 +8,7 @@ const swaggerDocument = require("./swagger.json")
 const cookieParser = require("cookie-parser")
 
 const { userRouter, transactionsRouter } = require("./routes")
-const { functions } = require("lodash")
+
 const nodemon = require("nodemon")
 
 const app = express()
