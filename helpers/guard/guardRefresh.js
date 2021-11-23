@@ -1,10 +1,5 @@
-const HttpCode = require("../constants/httpConstants")
-const { userControllers } = require("../../controllers")
 const { databaseApi } = require("../../repository")
-const {
-	JWT_SECRET_KEY,
-	JWT_REFRESH_SECRET_KEY,
-} = require("../../config/dotenv-config")
+const { JWT_REFRESH_SECRET_KEY } = require("../../config/dotenv-config")
 const jwt = require("jsonwebtoken")
 const { getAccessToken, getRefreshToken, sendError } = require("./guardHelpers")
 
