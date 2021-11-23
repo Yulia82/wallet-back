@@ -10,6 +10,7 @@ const transactionSchema = new Schema(
 		sum: { type: Number, required: true },
 		date: { type: String, required: false },
 		balance: { type: Number },
+		comments: { type: String, default: "" },
 		owner: { type: SchemaTypes.ObjectId, ref: "user" }, //! Связь транзакций с юзером.
 	},
 	{
