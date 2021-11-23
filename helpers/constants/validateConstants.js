@@ -9,5 +9,6 @@ const validTransactionConst = {
 	MAX_SUM: 1000000,
 	MIN_LENGTH: 3,
 	MAX_LENGTH: 20,
+	MAX_COMMENTS_LENGTH: 30,
 }
 module.exports = { ValidNameLength, validTransactionConst }
