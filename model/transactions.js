@@ -1,4 +1,4 @@
-const { boolean } = require("joi")
+const { boolean, number } = require("joi")
 const { Schema, model, SchemaTypes } = require("mongoose")
 
 const mongoosePaginate = require("mongoose-paginate-v2")
@@ -9,6 +9,7 @@ const transactionSchema = new Schema(
 		category: { type: String, required: true },
 		sum: { type: Number, required: true },
 		date: { type: String, required: true },
+		// sortDate: { type: Date, required: true },
 		balance: { type: Number },
 		comments: { type: String, default: "" },
 		owner: { type: SchemaTypes.ObjectId, ref: "user" }, //! Связь транзакций с юзером.

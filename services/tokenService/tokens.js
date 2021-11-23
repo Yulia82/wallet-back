@@ -10,7 +10,7 @@ class TokenService {
 	}
 	createTokens() {
 		const loginToken = jwt.sign(this.payload, JWT_SECRET_KEY, {
-			expiresIn: "1m",
+			expiresIn: "1h",
 		})
 
 		const refreshToken = jwt.sign(this.payload, JWT_REFRESH_SECRET_KEY, {
