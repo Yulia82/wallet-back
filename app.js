@@ -9,8 +9,6 @@ const cookieParser = require("cookie-parser")
 
 const { userRouter, transactionsRouter } = require("./routes")
 
-const nodemon = require("nodemon")
-
 const app = express()
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short"
