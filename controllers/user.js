@@ -127,10 +127,11 @@ const logout = async (req, res, next) => {
 }
 
 const getCurrentUser = async ({ user }, res, next) => {
-	const { name, email, balance } = user
+	const { name, email, balance, loginToken } = user
 	return res.status(OK).json({
 		status: "success",
 		code: OK,
+		loginToken,
 		response: {
 			user: { name, email, balance },
 			categories: categoriesConstants.categoryKeys,
