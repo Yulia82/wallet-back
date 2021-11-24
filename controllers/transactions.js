@@ -13,6 +13,7 @@ const getTransactions = async ({ user, query }, res) => {
 	const response = await databaseApi.getAllTransaction(searchOptions, {
 		limit,
 		offset,
+		sort: { date: -1 },
 	})
 	res.json({
 		status: "success",
@@ -53,7 +54,7 @@ const saveTransaction = async ({ user, body }, res) => {
 		body.type,
 	)
 	const dataSeconds = new Date(+body.date)
-	console.log(dataSeconds)
+	console.log("dataSeconds", +body.date, dataSeconds)
 	console.log(
 		`${dataSeconds.getFullYear()}-${
 			dataSeconds.getMonth() + 1
@@ -69,6 +70,7 @@ const saveTransaction = async ({ user, body }, res) => {
 		date: `${dataSeconds.getFullYear()}-${month < 10 ? `0${month}` : month}-${
 			day < 10 ? `0${day}` : day
 		}`,
+		// sortDate: +body.date,
 	})
 	res.status(HttpCode.CREATED).json({
 		status: "success",

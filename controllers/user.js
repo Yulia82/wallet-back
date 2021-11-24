@@ -88,8 +88,6 @@ const login = async (req, res, next) => {
 			path: "/",
 			secure: false,
 			httpOnly: true,
-			// domain: "http://localhost:3000",
-			// signed: false,
 		})
 		.status(OK)
 		.json({
@@ -97,7 +95,7 @@ const login = async (req, res, next) => {
 			code: OK,
 			loginToken,
 			response: {
-				user,
+				user: { name: user.name, email: user.email, balance: user.balance },
 				categories: categoriesConstants.categoryKeys,
 			},
 		})
@@ -128,16 +126,14 @@ const logout = async (req, res, next) => {
 	return res.status(NO_CONTENT).json()
 }
 
-const getCurrentUser = async (req, res, next) => {
-	const { name, email, balance, loginToken } = req.user
+const getCurrentUser = async ({ user }, res, next) => {
+	const { name, email, balance } = user
 	return res.status(OK).json({
 		status: "success",
 		code: OK,
-		loginToken,
 		response: {
-			name,
-			email,
-			balance,
+			user: { name, email, balance },
+			categories: categoriesConstants.categoryKeys,
 		},
 	})
 }
