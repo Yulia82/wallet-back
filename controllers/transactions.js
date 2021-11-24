@@ -134,10 +134,9 @@ const getStatistic = async ({ user, query }, res) => {
 
 	const transactions = await databaseApi.getStat(searchOptions)
 
-	const allCategory = [
-		...Object.keys(categoriesConstants.categoryIncrement),
-		...Object.keys(categoriesConstants.categoryDecrement),
-	]
+	const renderColor = () => Math.round(Math.random() * (250 - 0) + 0)
+	const renderRGBColor = callback =>
+		`rgb(${callback()}, ${callback()}, ${callback()})`
 
 	const response = transactions.reduce(
 		(acc, el) => {
@@ -167,12 +166,19 @@ const getStatistic = async ({ user, query }, res) => {
 						...acc,
 						list:
 							index === -1
-								? [...oldList, { summary: el.sum, type: el.category }]
+								? [
+										...oldList,
+										{
+											summary: el.sum,
+											type: el.category,
+											color: renderRGBColor(renderColor),
+										},
+								  ]
 								: [
 										...oldList.map(item => {
 											if (item.type === el.category) {
 												return {
-													type: el.category,
+													...item,
 													summary: oldList[index].summary + el.sum,
 												}
 											}
