@@ -18,7 +18,12 @@ app.use(logger(formatsLogger))
 app.use(cookieParser())
 
 app.use(express.json({ limit: 10000 }))
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }))
+app.use(
+	cors({
+		credentials: true,
+		origin: "https://best-wallet-coconut.netlify.app",
+	}),
+)
 
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use("/api/user", userRouter)

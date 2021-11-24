@@ -84,10 +84,11 @@ const login = async (req, res, next) => {
 
 	return res
 		.cookie("refreshToken", refreshToken, {
-			maxAge: 30 * 60 * 1000,
+			maxAge: 20 * 60 * 1000,
 			path: "/",
 			secure: false,
 			httpOnly: true,
+			// domain: "http://localhost:3000",
 		})
 		.status(OK)
 		.json({
@@ -111,7 +112,7 @@ const refreshLoginToken = async ({ user }, res) => {
 
 	return res
 		.cookie("refreshToken", refreshToken, {
-			maxAge: 30 * 60 * 1000,
+			maxAge: 20 * 60 * 1000,
 			path: "/",
 			secure: false,
 			httpOnly: true,
@@ -127,10 +128,11 @@ const logout = async (req, res, next) => {
 }
 
 const getCurrentUser = async ({ user }, res, next) => {
-	const { name, email, balance } = user
+	const { name, email, balance, loginToken } = user
 	return res.status(OK).json({
 		status: "success",
 		code: OK,
+		loginToken,
 		response: {
 			user: { name, email, balance },
 			categories: categoriesConstants.categoryKeys,
