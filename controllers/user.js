@@ -88,6 +88,7 @@ const login = async (req, res, next) => {
 			path: "/",
 			secure: false,
 			httpOnly: true,
+			domain: "http://localhost:3000",
 		})
 		.status(OK)
 		.json({
