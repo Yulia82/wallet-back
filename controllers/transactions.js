@@ -153,6 +153,7 @@ const getStatistic = async ({ user, query }, res) => {
 				if (year !== testYear) return acc
 			}
 			const index = acc.list.findIndex(item => item.type === el.category)
+			const oldList = acc.list
 
 			acc = el.type
 				? {
@@ -166,13 +167,17 @@ const getStatistic = async ({ user, query }, res) => {
 						...acc,
 						list:
 							index === -1
-								? [...acc.list, { summary: el.sum, type: el.category }]
+								? [...oldList, { summary: el.sum, type: el.category }]
 								: [
-										...acc.list.slice(index, 1),
-										{
-											...acc.list[index],
-											summary: acc.list[index].summary + el.sum,
-										},
+										...oldList.map(item => {
+											if (item.type === el.category) {
+												return {
+													type: el.category,
+													summary: oldList[index].summary + el.sum,
+												}
+											}
+											return item
+										}),
 								  ],
 						amounts: {
 							...acc.amounts,
