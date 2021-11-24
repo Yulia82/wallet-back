@@ -130,36 +130,52 @@ const getStatistic = async ({ user, query }, res) => {
 	const { id: userId, loginToken } = user
 	const { month = null, year = null } = query
 
-	let searchOptions = { owner: userId, type: false }
+	let searchOptions = { owner: userId }
 
 	const transactions = await databaseApi.getStat(searchOptions)
 
-	let response = []
+	const allCategory = [
+		...Object.keys(categoriesConstants.categoryIncrement),
+		...Object.keys(categoriesConstants.categoryDecrement),
+	]
 
-	Object.keys(categoriesConstants.categoryIncrement).forEach(key => {
-		const category = transactions.reduce(
-			(acc, el) => {
-				if (month) {
-					const testMonth = el.date.split("-")[1]
+	const response = transactions.reduce(
+		(acc, el) => {
+			if (month) {
+				const testMonth = el.date.split("-")[1]
 
-					if (month !== testMonth) return acc
-				}
+				if (month !== testMonth) return acc
+			}
 
-				if (year) {
-					const testYear = el.date.split("-")[0]
-					console.log(el.date.split("-")[0] === year)
-					if (year !== testYear) return acc
-				}
-				if (el.category === key) {
-					acc = { ...acc, summary: acc.summary + el.sum }
-					return acc
-				}
-				return acc
-			},
-			{ summary: 0, type: key },
-		)
-		response.push(category)
-	})
+			if (year) {
+				const testYear = el.date.split("-")[0]
+				console.log(el.date.split("-")[0] === year)
+				if (year !== testYear) return acc
+			}
+
+			acc = el.type
+				? {
+						...acc,
+						amounts: {
+							...acc.amounts,
+							income: acc.amounts.income + el.sum,
+						},
+				  }
+				: {
+						...acc,
+						list: [...acc.list, { summary: el.sum, type: el.category }],
+						amounts: {
+							...acc.amounts,
+							expense: acc.amounts.expense + el.sum,
+						},
+				  }
+			return acc
+		},
+		{
+			list: [],
+			amounts: { income: 0, expense: 0 },
+		},
+	)
 
 	return res.status(HttpCode.OK).json({
 		status: "success",
