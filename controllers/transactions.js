@@ -168,20 +168,12 @@ const getStatistic = async ({ user, query }, res) => {
 							index === -1
 								? [...acc.list, { summary: el.sum, type: el.category }]
 								: [
-										...acc.list.slice(index, 0),
+										...acc.list.slice(index, 1),
 										{
 											...acc.list[index],
 											summary: acc.list[index].summary + el.sum,
 										},
 								  ],
-						// list: [
-						// 	...acc.list,
-						// 	acc.list.findIndex(item => item.type === el.category) === -1
-						// 		? { summary: el.sum, type: el.category }
-						// 		: (acc.list[
-						// 				acc.list.findIndex(item => item.type === el.category)
-						// 		  ].summary = el.sum),
-						// ],
 						amounts: {
 							...acc.amounts,
 							expense: acc.amounts.expense + el.sum,
