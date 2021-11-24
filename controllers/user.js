@@ -84,11 +84,11 @@ const login = async (req, res, next) => {
 
 	return res
 		.cookie("refreshToken", refreshToken, {
-			maxAge: 30 * 60 * 1000,
+			maxAge: 20 * 60 * 1000,
 			path: "/",
 			secure: false,
 			httpOnly: true,
-			domain: "http://localhost:3000",
+			// domain: "http://localhost:3000",
 		})
 		.status(OK)
 		.json({
@@ -112,7 +112,7 @@ const refreshLoginToken = async ({ user }, res) => {
 
 	return res
 		.cookie("refreshToken", refreshToken, {
-			maxAge: 30 * 60 * 1000,
+			maxAge: 20 * 60 * 1000,
 			path: "/",
 			secure: false,
 			httpOnly: true,
